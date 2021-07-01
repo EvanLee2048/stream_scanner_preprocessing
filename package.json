@@ -1,5 +1,5 @@
 {
-  "name": "Stampio",
+  "name": "StampioTest",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,25 +9,14 @@
   },
   "dependencies": {
     "@mdi/js": "^5.9.55",
-    "@riophae/vue-treeselect": "^0.4.0",
-    "@types/motion-sensors-polyfill": "^0.3.0",
-    "@vue-stripe/vue-stripe": "^4.2.4",
-    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "fontsource-roboto": "^4.0.0",
-    "https": "^1.0.0",
     "ios-inner-height": "^1.1.1",
-    "pdf-lib": "^1.16.0",
     "typeface-roboto": "^1.1.13",
     "vue": "^2.6.11",
     "vue-cli": "^2.9.6",
-    "vue-file-agent": "^1.7.3",
-    "vue-good-table": "^2.21.9",
     "vue-i18n": "^8.24.4",
-    "vue-pdf": "^4.2.0",
-    "vue-recaptcha": "^1.3.0",
     "vuetify": "^2.4.9",
-    "vuetify-file-browser": "^1.0.2",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
