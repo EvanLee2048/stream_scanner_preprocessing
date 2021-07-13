@@ -1,7 +1,7 @@
-<template>
+<template>     <!--This is a beta prototype of the main project-->
   <v-app>
     <!-- input image, change src path if needed -->
-    <img ref="input_img" style="top: -10000px; position: fixed;" @load="init" src="@/test/1621239966.jpg"/>
+    <img ref="input_img" style="top: -10000px; position: fixed;" @load="init" src="@/test/1621239427.jpg"/>
     <v-container style="background-color: #1c7430;">
       <v-row justify="center">
         <p class="text-center text-h4 my-2">Input Image</p>
@@ -69,25 +69,26 @@ export default {
     }
   },
   methods: {
-    rectangleDetector(image, pos){
-      let w = image.width;
+    rectangleDetector(image, pos){  //Determine if image is relevant
+      let w = image.width;                            
       let h = image.height;
-      let imgData = image.data;
-      let surface= new Array(w+h-1).fill(0);
-      let grayscaleData = new Array(imgData.length/4);
-      let boundary = w/5;
-      for (let i=0; i<imgData.length; i+=4) {
+      let imgData = image.data;                                                 //What data is being stored at imgData ?          ---> 
+      let surface= new Array(w+h-1).fill(0);                                    //What is the surface variable representing ?     --->  45 degree line
+      let grayscaleData = new Array(imgData.length/4);                          //Why is the grayscaleData ---> length/4 ?   ---> Turning into grayscale data
+      let boundary = w/5;        //Looking for edge                                                                //Which boundary is this ?  --->
+      for (let i=0; i<imgData.length; i+=4) {  
         grayscaleData[i/4] = Math.round(imgData[i]*0.2989+imgData[i+1]*0.587+imgData[i+2]*0.114);
       }
       let mean = grayscaleData.reduce((a, b) => a + b, 0) / grayscaleData.length;
       let sd = Math.sqrt(grayscaleData.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / grayscaleData.length);
-      let binaryData = grayscaleData.map(d => d > mean ? 0 : 1);
-      if(mean < 16){
-        console.log(pos + " too dim");
+      let binaryData = grayscaleData.map(d => d > mean ? 0 : 1);   //if grayscaleData > mean, then grayscaleData = binaryData ?
+     
+     if(mean < 16){                                                            //The mean determines if the image is too bright or too dim
+        console.log(pos + " too dim");   //Irrelevant 
         return -100;
       }
       if(mean > 239){
-        console.log(pos + " too bright");
+        console.log(pos + " too bright"); //Irrevelant 
         return -10;
       }
       if(sd < 20){
@@ -160,7 +161,8 @@ export default {
         }
       }
     },
-    drawCorner(image){
+    
+    drawCorner(image){                 //Drawing the blue line on the corners ----> Scanning for black square on corners 
       const wh = 2*this.cornerSize;
       const imageWH = image.width;
       for (var i=0; i<image.data.length; i+=4) {
@@ -171,27 +173,31 @@ export default {
         }
       }
     },
-    lightSpot(image, imageWH){
-      let startXY = 50;
-      let n = 13;
-      let step = 4;
+    
+    
+    lightSpot(image, imageWH){        //imageWH --> the width and height of the image, square so width = height ----> 320
+      let startXY = 50;               //Probably the starting point of blue dot
+      let n = 13;                     //size of xQueue ---> Consecutive white pixels to declare it as blue spot
+      let step = 4;                   //Spacing between the blue dots
 
-      let lightSpotX = Array.from(Array(imageWH), () => new Array(0));
+      let lightSpotX = Array.from(Array(imageWH), () => new Array(0));   // Making an array with the amount of pixels of image (320px)
       let lightSpotY = Array.from(Array(imageWH), () => new Array(0));
-      let crop_imageWH = imageWH-2*startXY;
+      let crop_imageWH = imageWH-2*startXY; //Value is 220, basically lowering the area of search
+
 
       let offset = (n+1)/2;
       let offsetXY = n+startXY;
-      for (let y=startXY; y<crop_imageWH+startXY; y++) { // y-axis
+
+      for (let y=startXY; y<crop_imageWH+startXY; y++) { // y-axis --> searching y-axis
         if (y%step===0){
           let xQueue = [];
-          for (let x=startXY; x<crop_imageWH+startXY; x++) { // x-axis
+          for (let x=startXY; x<crop_imageWH+startXY; x++) { 
             let i = x+y*imageWH<<2;
             image[i] = image[i+1] = image[i+2] = Math.round(image[i]*0.2989+image[i+1]*0.587+image[i+2]*0.114);
             if(x>=offsetXY){
               let check = true;
               for(let a=0; a<n; a++){
-                if(xQueue[a]<223){
+                if(xQueue[a]<223){   
                   check = false;
                   break;
                 }
@@ -205,10 +211,11 @@ export default {
           }
         }
       }
-      for (let x=startXY; x<crop_imageWH+startXY; x++) { // x-axis
+
+      for (let x=startXY; x<crop_imageWH+startXY; x++) {         // x-axis  
         if(x%step===0){
           let yQueue = [];
-          for (let y=startXY; y<crop_imageWH+startXY; y++) { // y-axis
+          for (let y=startXY; y<crop_imageWH+startXY; y++) {     // y-axis
             if(y>=offsetXY){
               let check = true;
               for(let a=0; a<n; a++){
@@ -226,28 +233,61 @@ export default {
           }
         }
       }
-      let result_x = [];
+
+
+      let result_x = [];       //Coordinates of the blue dot
       let result_y = [];
+
+      // console.log(lightSpotX);
+      // console.log(lightSpotY);
+
       // Draw Detected Light Spot
-      for (let y=0;y<imageWH; y++){ // loop over y-axis
+      
+      for (let y=0;y<imageWH; y++){ // loop over y-axis    //Blue dot ---> check both x and y axis
         lightSpotX[y].filter(x => lightSpotY[x].includes(y)).forEach(x => {
           let k = x+y*imageWH << 2;
           image[k] = 0;
           image[k+1] = 0;
           image[k+2] = 255;
-          result_x.push(x);
+          
+          result_x.push(x);        //push = append in python
           result_y.push(y);
         });
       }
-      let median_x = result_x.sort()[Math.floor(result_x.length/2)];
+
+      //!!!!! New Code
+      
+      var min_y = Math.min(...result_y);
+      var max_y = Math.max(...result_y);
+
+      var min_x = Math.min(...result_x);
+      var max_x = Math.max(...result_x);
+
+      var area = (max_y - min_y)*(max_x-min_x);
+      
+      var no_blueDot = result_x.length;
+      var density = no_blueDot/area
+      
+      console.log("Area:" + area, " Blue Dot:" + no_blueDot + " Density:" + density);
+
+      if (density>0.005){
+        console.log("There is a bright spot");
+      }
+      else{
+        console.log("There is no bright spot");
+      }
+
+      //!!!! New Code
+
+      let median_x = result_x.sort()[Math.floor(result_x.length/2)];  //Purple cursor ---> used to mark the lgiht spot
       let median_y = result_y.sort()[Math.floor(result_y.length/2)];
-      for(let x=median_x-4;x<median_x+5; x++){
+      for(let x=median_x-4;x<median_x+5; x++){ //Purple
         image[(x+median_y*imageWH)*4+1] = 60;
       }
       for(let y=median_y-4;y<median_y+5; y++){
         image[(median_x+y*imageWH)*4+1] = 60;
       }
-      for(let x=imageWH/2-4;x<imageWH/2+5; x++){
+      for(let x=imageWH/2-4;x<imageWH/2+5; x++){ //Red
         image[(x+imageWH/2*imageWH)*4] = 255;
         image[(x+imageWH/2*imageWH)*4+1] = 0;
         image[(x+imageWH/2*imageWH)*4+2] = 0;
@@ -258,13 +298,14 @@ export default {
         image[(imageWH/2+y*imageWH)*4+2] = 0;
       }
     },
+
     init(){
       this.canvas.width = this.$refs.input_img.width;
       this.canvas.height = this.$refs.input_img.height;
       this.canvas.getContext('2d').drawImage(this.$refs.input_img,0,0);
       const wh = 2*this.cornerSize;
       let imgData = this.canvas.getContext('2d').getImageData(0, 0, this.$refs.input_img.width, this.$refs.input_img.height);
-      let tlCornerData = this.canvas.getContext('2d').getImageData(0, 0, wh, wh);
+      let tlCornerData = this.canvas.getContext('2d').getImageData(0, 0, wh, wh);       //Makes sure browser can handle the image
       let trCornerData = this.canvas.getContext('2d').getImageData(this.$refs.input_img.width-wh, 0, wh, wh);
       let blCornerData = this.canvas.getContext('2d').getImageData(0, this.$refs.input_img.height-wh, wh, wh);
       let brCornerData = this.canvas.getContext('2d').getImageData(this.$refs.input_img.width-wh, this.$refs.input_img.height-wh, wh, wh);
