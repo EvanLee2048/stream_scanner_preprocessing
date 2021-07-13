@@ -1,7 +1,7 @@
 <template>     <!--This is a beta prototype of the main project-->
   <v-app>
     <!-- input image, change src path if needed -->
-    <img ref="input_img" style="top: -10000px; position: fixed;" @load="init" src="@/test/1621239427.jpg"/>
+    <img ref="input_img" style="top: -10000px; position: fixed;" @load="init" src="@/test/3.png"/>
     <v-container style="background-color: #1c7430;">
       <v-row justify="center">
         <p class="text-center text-h4 my-2">Input Image</p>
@@ -270,7 +270,7 @@ export default {
       
       console.log("Area:" + area, " Blue Dot:" + no_blueDot + " Density:" + density);
 
-      if (density>0.005){
+      if (density>0.005 && no_blueDot>16){
         console.log("There is a bright spot");
       }
       else{
