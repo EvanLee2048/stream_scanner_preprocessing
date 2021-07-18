@@ -65,7 +65,7 @@ export default {
       tl_mean: 0,
       tr_mean: 0,
       bl_mean: 0,
-      br_mean: 0
+      br_mean: 0,
     }
   },
   methods: {
