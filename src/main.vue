@@ -298,7 +298,6 @@ export default {
         image[(imageWH/2+y*imageWH)*4+2] = 0;
       }
     },
-
     init(){
       this.canvas.width = this.$refs.input_img.width;
       this.canvas.height = this.$refs.input_img.height;
@@ -325,6 +324,9 @@ export default {
       this.$refs.br.getContext("2d").putImageData(brCornerData, 0, 0);
       this.$refs.img.getContext("2d").putImageData(imgData, 0, 0);
     }
+  },
+  created() {
+    // TODO async load the opencv here!!!!!!!!!!!!!!!
   }
 }
 </script>
