@@ -1,7 +1,7 @@
 <template>     <!--This is a beta prototype of the main project-->
   <v-app>
     <!-- input image, change src path if needed -->
-    <img ref="input_img" style="top: -10000px; position: fixed;" @load="init" src="@/test/1626248399.jpg"/>
+    <img ref="input_img" style="top: -10000px; position: fixed;" @load="init" src="@/test/1621237163.jpg"/>
     <v-container style="background-color: #1c7430;">
       <v-row justify="center">
         <p class="text-center text-h4 my-2">Input Image</p>
@@ -303,7 +303,6 @@ export default {
       }
     },
 
-
     //!!! - LazyLoad OpenCv
 
 
@@ -321,22 +320,21 @@ export default {
       script.onload = () => {
         this.opencv_ready= true;
         console.log("OpenCV loaded");
+        console.log(window.cv);
         // this.setMsg('OpenCV.js is loaded.')
       }
+
       // window.Module = {
       //   wasmBinaryFile: `${publicPath}libs/opencv_js.wasm`, // for wasm mode
       //   _main: () => {
       //     this.setMsg('OpenCV.js is ready.')
-      //     cv = window.cv
+          // cv = window.cv
       //     // console.log(cv.getBuildInformation())
       //     // this.startVideoProcessing()
       //   }
       // }
     },
     //!!! - LazyLoad OpenCv
-
-
-
 
     init(){
       this.canvas.width = this.$refs.input_img.width;
@@ -364,6 +362,12 @@ export default {
       this.$refs.br.getContext("2d").putImageData(brCornerData, 0, 0);
       this.$refs.img.getContext("2d").putImageData(imgData, 0, 0);
     }
+  },
+  created() {
+    // TODO async load the opencv here!!!!!!!!!!!!!!!
+
+    this.loadOpenCv();
+
   }
 }
 </script>
