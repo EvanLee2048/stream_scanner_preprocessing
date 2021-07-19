@@ -1,7 +1,7 @@
 <template>     <!--This is a beta prototype of the main project-->
   <v-app>
     <!-- input image, change src path if needed -->
-    <img ref="input_img" style="top: -10000px; position: fixed;" @load="init" src="@/test/3.png"/>
+    <img ref="input_img" style="top: -10000px; position: fixed;" @load="init" src="@/test/1626248399.jpg"/>
     <v-container style="background-color: #1c7430;">
       <v-row justify="center">
         <p class="text-center text-h4 my-2">Input Image</p>
@@ -65,7 +65,8 @@ export default {
       tl_mean: 0,
       tr_mean: 0,
       bl_mean: 0,
-      br_mean: 0
+      br_mean: 0,
+      opencv_ready: false
     }
   },
   methods: {
@@ -137,6 +138,8 @@ export default {
       console.log(pos + " hasn't corner");
       return -1;
     },
+
+
     drawCursor(img, cursor, pos){
       let arr = img.data;
       let wh = img.width;
@@ -270,7 +273,7 @@ export default {
       
       console.log("Area:" + area, " Blue Dot:" + no_blueDot + " Density:" + density);
 
-      if (density>0.005 && no_blueDot>16){
+      if (density>0.005 && no_blueDot>64){
         console.log("There is a bright spot");
       }
       else{
@@ -278,6 +281,7 @@ export default {
       }
 
       //!!!! New Code
+
 
       let median_x = result_x.sort()[Math.floor(result_x.length/2)];  //Purple cursor ---> used to mark the lgiht spot
       let median_y = result_y.sort()[Math.floor(result_y.length/2)];
@@ -298,6 +302,41 @@ export default {
         image[(imageWH/2+y*imageWH)*4+2] = 0;
       }
     },
+
+
+    //!!! - LazyLoad OpenCv
+
+
+      loadOpenCv() {
+      // if (!window.WebAssembly) {
+      //   this.setMsg("Your web browser doesn't support WebAssembly.", 'warn')
+      //   return
+      // }
+      // this.setMsg('loading OpenCv.js')
+      const script = document.createElement('script')
+      script.type = 'text/javascript'
+      script.async = 'async'
+      script.src = `./opencv_v4.2.0.js`
+      document.body.appendChild(script)
+      script.onload = () => {
+        this.opencv_ready= true;
+        console.log("OpenCV loaded");
+        // this.setMsg('OpenCV.js is loaded.')
+      }
+      // window.Module = {
+      //   wasmBinaryFile: `${publicPath}libs/opencv_js.wasm`, // for wasm mode
+      //   _main: () => {
+      //     this.setMsg('OpenCV.js is ready.')
+      //     cv = window.cv
+      //     // console.log(cv.getBuildInformation())
+      //     // this.startVideoProcessing()
+      //   }
+      // }
+    },
+    //!!! - LazyLoad OpenCv
+
+
+
 
     init(){
       this.canvas.width = this.$refs.input_img.width;
@@ -331,3 +370,8 @@ export default {
 
 <style scoped>
 </style>
+
+
+
+
+
