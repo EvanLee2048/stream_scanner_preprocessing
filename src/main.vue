@@ -1,13 +1,18 @@
 <template>     <!--This is a beta prototype of the main project-->
   <v-app>
     <!-- input image, change src path if needed -->
-    <img ref="input_img" style="top: -10000px; position: fixed;" @load="init" src="@/test/1621237163.jpg"/>
     <v-container style="background-color: #1c7430;">
       <v-row justify="center">
-        <p class="text-center text-h4 my-2">Input Image</p>
       </v-row>
       <v-row justify="center">
-        <canvas ref="img" width="320" height="320"></canvas>
+        <v-col class="text-center">
+          <p class="text-center text-h4 my-2">Input Image</p>
+          <img ref="input_img" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599075.jpg"/>
+        </v-col>
+        <v-col class="text-center">
+          <p class="text-center text-h4 my-2">Processed Image</p>
+          <canvas ref="img" width="320" height="320"></canvas>
+        </v-col>
       </v-row>
       <v-row justify="center">
         <v-col>
@@ -66,7 +71,7 @@ export default {
       tr_mean: 0,
       bl_mean: 0,
       br_mean: 0,
-      opencv_ready: false
+      cv: null
     }
   },
   methods: {
@@ -138,8 +143,6 @@ export default {
       console.log(pos + " hasn't corner");
       return -1;
     },
-
-
     drawCursor(img, cursor, pos){
       let arr = img.data;
       let wh = img.width;
@@ -164,7 +167,6 @@ export default {
         }
       }
     },
-    
     drawCorner(image){                 //Drawing the blue line on the corners ----> Scanning for black square on corners 
       const wh = 2*this.cornerSize;
       const imageWH = image.width;
@@ -176,8 +178,6 @@ export default {
         }
       }
     },
-    
-    
     lightSpot(image, imageWH){        //imageWH --> the width and height of the image, square so width = height ----> 320
       let startXY = 50;               //Probably the starting point of blue dot
       let n = 13;                     //size of xQueue ---> Consecutive white pixels to declare it as blue spot
@@ -186,8 +186,6 @@ export default {
       let lightSpotX = Array.from(Array(imageWH), () => new Array(0));   // Making an array with the amount of pixels of image (320px)
       let lightSpotY = Array.from(Array(imageWH), () => new Array(0));
       let crop_imageWH = imageWH-2*startXY; //Value is 220, basically lowering the area of search
-
-
       let offset = (n+1)/2;
       let offsetXY = n+startXY;
 
@@ -302,40 +300,41 @@ export default {
         image[(imageWH/2+y*imageWH)*4+2] = 0;
       }
     },
-
-    //!!! - LazyLoad OpenCv
-
-
-      loadOpenCv() {
-      // if (!window.WebAssembly) {
-      //   this.setMsg("Your web browser doesn't support WebAssembly.", 'warn')
-      //   return
-      // }
-      // this.setMsg('loading OpenCv.js')
-      const script = document.createElement('script')
-      script.type = 'text/javascript'
-      script.async = 'async'
-      script.src = `./opencv_v4.2.0.js`
-      document.body.appendChild(script)
-      script.onload = () => {
-        this.opencv_ready= true;
-        console.log("OpenCV loaded");
-        console.log(window.cv);
-        // this.setMsg('OpenCV.js is loaded.')
+    opencvCompute(){
+      if(window.cv && window.cv.Mat && !this.cv){
+        this.cv = window.cv;
+        console.log('opencv loaded');
+      } else if(!this.cv){
+        setTimeout(() => {this.opencvCompute()}, 100);
       }
 
-      // window.Module = {
-      //   wasmBinaryFile: `${publicPath}libs/opencv_js.wasm`, // for wasm mode
-      //   _main: () => {
-      //     this.setMsg('OpenCV.js is ready.')
-          // cv = window.cv
-      //     // console.log(cv.getBuildInformation())
-      //     // this.startVideoProcessing()
-      //   }
-      // }
-    },
-    //!!! - LazyLoad OpenCv
+      if(this.cv){
+        let mat = this.cv.imread(this.canvas); // load source image into cv
 
+        this.cv.imshow(this.$refs.img, mat); // load cv result to canvas (processed image)
+        // TODO : Your opencv image processing here!!!!!!!!
+        // https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
+
+        //--------------- Brightness and contrast adjustments
+        const alpha = 1.0; /*< Simple contrast control ,range : 0 to infinite */
+        const beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
+        mat.convertTo(mat, -1, alpha, beta);
+
+        //--------------- Gamma correction
+        const gamma = 1.8;    /*< gamma coefficient control ,range : 0 to infinite */
+        let lookUpTable = new this.cv.Mat(1, 256, this.cv.CV_8U);
+        for (let i = 0; i < 256; i++) {
+          lookUpTable[i] = Math.round(Math.pow(i / 255.0, gamma) * 255.0);
+        }
+        let img = new this.cv.Mat();
+        console.log(this.cv);
+        // this.cv.lut(mat, lookUpTable, img);// No lookUpTable function in JS opencv
+        this.cv.imshow(this.$refs.img, img); // load cv result to canvas (processed image)
+      } else {
+        setTimeout(() => {this.opencvCompute()}, 1000);
+        console.log("opencv not loaded");
+      }
+    },
     init(){
       this.canvas.width = this.$refs.input_img.width;
       this.canvas.height = this.$refs.input_img.height;
@@ -361,14 +360,9 @@ export default {
       this.$refs.bl.getContext("2d").putImageData(blCornerData, 0, 0);
       this.$refs.br.getContext("2d").putImageData(brCornerData, 0, 0);
       this.$refs.img.getContext("2d").putImageData(imgData, 0, 0);
-    }
+      this.opencvCompute();
+    },
   },
-  created() {
-    // TODO async load the opencv here!!!!!!!!!!!!!!!
-
-    this.loadOpenCv();
-
-  }
 }
 </script>
 
