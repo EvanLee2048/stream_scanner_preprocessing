@@ -251,7 +251,7 @@ export default {
           image[k+1] = 0;
           image[k+2] = 255;
           
-          result_x.push(x);        //push = append in python
+          result_x.push(x);        //push = appenhttps://us05web.zoom.us/j/81672731901?pwd=dWpWdmJLci90TTg4LzZUaXI4S0pKdz09d in python
           result_y.push(y);
         });
       }
@@ -311,7 +311,6 @@ export default {
       if(this.cv){
         let mat = this.cv.imread(this.canvas); // load source image into cv
 
-        this.cv.imshow(this.$refs.img, mat); // load cv result to canvas (processed image)
         // TODO : Your opencv image processing here!!!!!!!!
         // https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
 
@@ -319,17 +318,18 @@ export default {
         const alpha = 1.0; /*< Simple contrast control ,range : 0 to infinite */
         const beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
         mat.convertTo(mat, -1, alpha, beta);
+        this.cv.imshow(this.$refs.img, mat); // load cv result to canvas (processed image)
 
         //--------------- Gamma correction
-        const gamma = 1.8;    /*< gamma coefficient control ,range : 0 to infinite */
-        let lookUpTable = new this.cv.Mat(1, 256, this.cv.CV_8U);
-        for (let i = 0; i < 256; i++) {
-          lookUpTable[i] = Math.round(Math.pow(i / 255.0, gamma) * 255.0);
-        }
-        let img = new this.cv.Mat();
-        console.log(this.cv);
+        // const gamma = 1.8;    /*< gamma coefficient control ,range : 0 to infinite */
+        // let lookUpTable = new this.cv.Mat(1, 256, this.cv.CV_8U);
+        // for (let i = 0; i < 256; i++) {
+        //   lookUpTable[i] = Math.round(Math.pow(i / 255.0, gamma) * 255.0);
+        // }
+        // let img = new this.cv.Mat();
+        // console.log(this.cv);
         // this.cv.lut(mat, lookUpTable, img);// No lookUpTable function in JS opencv
-        this.cv.imshow(this.$refs.img, img); // load cv result to canvas (processed image)
+        // this.cv.imshow(this.$refs.img, img); // load cv result to canvas (processed image)
       } else {
         setTimeout(() => {this.opencvCompute()}, 1000);
         console.log("opencv not loaded");
