@@ -251,12 +251,12 @@ export default {
           image[k+1] = 0;
           image[k+2] = 255;
           
-          result_x.push(x);        //push = appenhttps://us05web.zoom.us/j/81672731901?pwd=dWpWdmJLci90TTg4LzZUaXI4S0pKdz09d in python
+          result_x.push(x);        //push = append in python
           result_y.push(y);
         });
       }
 
-      //!!!!! New Code
+      //!!!!! New Code  --> Bright Spot Detect
       
       var min_y = Math.min(...result_y);
       var max_y = Math.max(...result_y);
@@ -278,10 +278,10 @@ export default {
         console.log("There is no bright spot");
       }
 
-      //!!!! New Code
+      //!!!! New Code --> Bright Spot Detect
 
 
-      let median_x = result_x.sort()[Math.floor(result_x.length/2)];  //Purple cursor ---> used to mark the lgiht spot
+      let median_x = result_x.sort()[Math.floor(result_x.length/2)];  //Purple cursor ---> used to mark the light spot
       let median_y = result_y.sort()[Math.floor(result_y.length/2)];
       for(let x=median_x-4;x<median_x+5; x++){ //Purple
         image[(x+median_y*imageWH)*4+1] = 60;
@@ -315,10 +315,20 @@ export default {
         // https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
 
         //--------------- Brightness and contrast adjustments
-        const alpha = 1.0; /*< Simple contrast control ,range : 0 to infinite */
-        const beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
-        mat.convertTo(mat, -1, alpha, beta);
-        this.cv.imshow(this.$refs.img, mat); // load cv result to canvas (processed image)
+        // const alpha = 2; /*< Simple contrast control ,range : 0 to infinite */
+        // const beta = -50;    /*< Simple brightness control ,range : -255 to 255 */
+        
+        
+        
+        // mat.convertTo(mat, -1, alpha, beta);
+
+        let dst = new this.cv.Mat();
+        this.cv.cvtColor(mat, mat, this.cv.COLOR_RGBA2GRAY, 0);
+        this.cv.equalizeHist(mat, dst);
+
+
+        
+        this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
 
         //--------------- Gamma correction
         // const gamma = 1.8;    /*< gamma coefficient control ,range : 0 to infinite */
@@ -330,6 +340,8 @@ export default {
         // console.log(this.cv);
         // this.cv.lut(mat, lookUpTable, img);// No lookUpTable function in JS opencv
         // this.cv.imshow(this.$refs.img, img); // load cv result to canvas (processed image)
+     
+
       } else {
         setTimeout(() => {this.opencvCompute()}, 1000);
         console.log("opencv not loaded");
