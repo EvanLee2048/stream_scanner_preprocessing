@@ -7,7 +7,27 @@
       <v-row justify="center">
         <v-col class="text-center">
           <p class="text-center text-h4 my-2">Input Image</p>
-          <img ref="input_img" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599075.jpg"/>
+<!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621237986.jpg"/>-->
+<!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621237992.jpg"/>-->
+<!--          <img ref="input_img" alt="light blur image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621237993.jpg"/>-->
+<!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621237996.jpg"/>-->
+<!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621238000.jpg"/>-->
+<!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239316.jpg"/>-->
+<!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239347.jpg"/>-->
+<!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239427.jpg"/>-->
+<!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239823.jpg"/>-->
+          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239824.jpg"/>
+
+<!--          <img ref="input_img" alt="mid dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599060.jpg"/>-->
+<!--          <img ref="input_img" alt="mid dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599061.jpg"/>-->
+
+<!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599074.jpg"/>-->
+<!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599075.jpg"/>-->
+<!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599076.jpg"/>-->
+<!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599077.jpg"/>-->
+<!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599078.jpg"/>-->
+<!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599079.jpg"/>-->
+<!--          <img ref="input_img" alt="dark blur image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599086.jpg"/>-->
         </v-col>
         <v-col class="text-center">
           <p class="text-center text-h4 my-2">Processed Image</p>
@@ -55,6 +75,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "App",
   data() {
@@ -71,7 +93,10 @@ export default {
       tr_mean: 0,
       bl_mean: 0,
       br_mean: 0,
-      cv: null
+      cv: null,
+      computing: false,
+      type: "image/jpeg",
+      quality: 0.80,
     }
   },
   methods: {
@@ -303,75 +328,93 @@ export default {
     opencvCompute(){
       if(window.cv && window.cv.Mat && !this.cv){
         this.cv = window.cv;
-        console.log('opencv loaded');
+        // console.log('opencv loaded');
       } else if(!this.cv){
         setTimeout(() => {this.opencvCompute()}, 100);
       }
 
       if(this.cv){
-        let mat = this.cv.imread(this.canvas); // load source image into cv
+        if(!this.computing){
+          this.computing = true;
+          let mat = this.cv.imread(this.canvas); // load source image into cv
 
-        // TODO : Your opencv image processing here!!!!!!!!
-        // https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
+          // TODO : Your opencv image processing here!!!!!!!!
+          // https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
 
-        //--------------- Brightness and contrast adjustments
-        // const alpha = 2; /*< Simple contrast control ,range : 0 to infinite */
-        // const beta = -50;    /*< Simple brightness control ,range : -255 to 255 */
-        
-        
-        
-        // mat.convertTo(mat, -1, alpha, beta);
+          //--------------- Brightness and contrast adjustments
+          const start = new Date().getTime();
+          let alpha = 3; /*< Simple contrast control ,range : 0 to infinite */
+          let beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
+          mat.convertTo(mat, -1, alpha, beta);
+          this.cv.imshow(this.$refs.img, mat); // load cv result to canvas (processed image)
+          console.log('contrast adjustments time : '+(new Date().getTime()-start));
+          this.remoteDecode('contrast adjustments '+alpha);
 
-        let dst = new this.cv.Mat();
-        this.cv.cvtColor(mat, mat, this.cv.COLOR_RGBA2GRAY, 0);
-        this.cv.equalizeHist(mat, dst);
-
-
-        
-        this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
-
-        //--------------- Gamma correction
-        // const gamma = 1.8;    /*< gamma coefficient control ,range : 0 to infinite */
-        // let lookUpTable = new this.cv.Mat(1, 256, this.cv.CV_8U);
-        // for (let i = 0; i < 256; i++) {
-        //   lookUpTable[i] = Math.round(Math.pow(i / 255.0, gamma) * 255.0);
-        // }
-        // let img = new this.cv.Mat();
-        // console.log(this.cv);
-        // this.cv.lut(mat, lookUpTable, img);// No lookUpTable function in JS opencv
-        // this.cv.imshow(this.$refs.img, img); // load cv result to canvas (processed image)
-     
-
+          //--------------- Histogram solution part
+          // let dst = new this.cv.Mat();
+          // this.cv.cvtColor(mat, mat, this.cv.COLOR_RGBA2GRAY, 0);
+          // this.cv.equalizeHist(mat, dst);
+          // this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
+          // this.remoteDecode('equalizeHist');
+        }
       } else {
         setTimeout(() => {this.opencvCompute()}, 1000);
-        console.log("opencv not loaded");
+        // console.log("opencv not loaded");
       }
+    },
+    remoteDecode(msg){
+      this.canvas.getContext('2d').drawImage(this.$refs.img,0,0);
+      const img = this.canvas.toDataURL(this.type, this.quality);
+      console.log(msg+' size : '+JSON.stringify(img.length));
+      let config = {
+        url:`https://dev.gaccai.com/decode`,
+        headers: {Authorization: `APPCODE 2519302fc8dc4786b94c03c5409788ce`},
+        method: 'post',
+        data: {
+          connection_id: 'connection_id',
+          jpeg_data:  img ? img.replace("data:image/jpeg;base64,", '') + '===' : null,
+          version: 'V0',
+          mode: "bypass",
+          scanner: 'web'
+        }
+      }
+      this.axiosInstance.request(config)
+          .then(response => console.log(msg+' decode message : '+JSON.stringify(response.data)))
+          .catch(err => console.log(msg+' error : '+JSON.stringify(err)));
     },
     init(){
       this.canvas.width = this.$refs.input_img.width;
       this.canvas.height = this.$refs.input_img.height;
       this.canvas.getContext('2d').drawImage(this.$refs.input_img,0,0);
-      const wh = 2*this.cornerSize;
+
+      this.axiosInstance = axios.create({
+        baseURL: '/',
+        timeout: 15000
+      });
       let imgData = this.canvas.getContext('2d').getImageData(0, 0, this.$refs.input_img.width, this.$refs.input_img.height);
-      let tlCornerData = this.canvas.getContext('2d').getImageData(0, 0, wh, wh);       //Makes sure browser can handle the image
-      let trCornerData = this.canvas.getContext('2d').getImageData(this.$refs.input_img.width-wh, 0, wh, wh);
-      let blCornerData = this.canvas.getContext('2d').getImageData(0, this.$refs.input_img.height-wh, wh, wh);
-      let brCornerData = this.canvas.getContext('2d').getImageData(this.$refs.input_img.width-wh, this.$refs.input_img.height-wh, wh, wh);
-      this.tl_cursor = this.rectangleDetector(tlCornerData, 'tl');
-      this.tr_cursor = this.rectangleDetector(trCornerData, 'tr');
-      this.bl_cursor = this.rectangleDetector(blCornerData, 'bl');
-      this.br_cursor = this.rectangleDetector(brCornerData, 'br');
-      this.lightSpot(imgData.data, imgData.width);
-      this.drawCursor(tlCornerData, this.tl_cursor, 'tl');
-      this.drawCursor(trCornerData, this.tr_cursor, 'tr');
-      this.drawCursor(blCornerData, this.bl_cursor, 'bl');
-      this.drawCursor(brCornerData, this.br_cursor, 'br');
-      this.drawCorner(imgData);
-      this.$refs.tl.getContext("2d").putImageData(tlCornerData, 0, 0);
-      this.$refs.tr.getContext("2d").putImageData(trCornerData, 0, 0);
-      this.$refs.bl.getContext("2d").putImageData(blCornerData, 0, 0);
-      this.$refs.br.getContext("2d").putImageData(brCornerData, 0, 0);
       this.$refs.img.getContext("2d").putImageData(imgData, 0, 0);
+      this.remoteDecode('original');
+      // const wh = 2*this.cornerSize;
+      // let imgData = this.canvas.getContext('2d').getImageData(0, 0, this.$refs.input_img.width, this.$refs.input_img.height);
+      // let tlCornerData = this.canvas.getContext('2d').getImageData(0, 0, wh, wh);       //Makes sure browser can handle the image
+      // let trCornerData = this.canvas.getContext('2d').getImageData(this.$refs.input_img.width-wh, 0, wh, wh);
+      // let blCornerData = this.canvas.getContext('2d').getImageData(0, this.$refs.input_img.height-wh, wh, wh);
+      // let brCornerData = this.canvas.getContext('2d').getImageData(this.$refs.input_img.width-wh, this.$refs.input_img.height-wh, wh, wh);
+      // this.tl_cursor = this.rectangleDetector(tlCornerData, 'tl');
+      // this.tr_cursor = this.rectangleDetector(trCornerData, 'tr');
+      // this.bl_cursor = this.rectangleDetector(blCornerData, 'bl');
+      // this.br_cursor = this.rectangleDetector(brCornerData, 'br');
+      // this.lightSpot(imgData.data, imgData.width);
+      // this.drawCursor(tlCornerData, this.tl_cursor, 'tl');
+      // this.drawCursor(trCornerData, this.tr_cursor, 'tr');
+      // this.drawCursor(blCornerData, this.bl_cursor, 'bl');
+      // this.drawCursor(brCornerData, this.br_cursor, 'br');
+      // this.drawCorner(imgData);
+      // this.$refs.tl.getContext("2d").putImageData(tlCornerData, 0, 0);
+      // this.$refs.tr.getContext("2d").putImageData(trCornerData, 0, 0);
+      // this.$refs.bl.getContext("2d").putImageData(blCornerData, 0, 0);
+      // this.$refs.br.getContext("2d").putImageData(brCornerData, 0, 0);
+      // this.$refs.img.getContext("2d").putImageData(imgData, 0, 0);
       this.opencvCompute();
     },
   },
