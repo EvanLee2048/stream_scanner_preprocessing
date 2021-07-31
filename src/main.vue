@@ -7,6 +7,7 @@
       <v-row justify="center">
         <v-col class="text-center">
           <p class="text-center text-h4 my-2">Input Image</p>
+         <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/Sample 1.jpg"/>
 <!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621237986.jpg"/>-->
 <!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621237992.jpg"/>-->
 <!--          <img ref="input_img" alt="light blur image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621237993.jpg"/>-->
@@ -16,7 +17,7 @@
 <!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239347.jpg"/>-->
 <!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239427.jpg"/>-->
 <!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239823.jpg"/>-->
-          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239824.jpg"/>
+          <!-- <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239824.jpg"/> -->
 
 <!--          <img ref="input_img" alt="mid dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599060.jpg"/>-->
 <!--          <img ref="input_img" alt="mid dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599061.jpg"/>-->
@@ -338,17 +339,19 @@ export default {
           this.computing = true;
           let mat = this.cv.imread(this.canvas); // load source image into cv
 
+          // let dst = new this.cv.Mat();
+
           // TODO : Your opencv image processing here!!!!!!!!
           // https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
 
           //--------------- Brightness and contrast adjustments
-          const start = new Date().getTime();
-          let alpha = 3; /*< Simple contrast control ,range : 0 to infinite */
-          let beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
-          mat.convertTo(mat, -1, alpha, beta);
-          this.cv.imshow(this.$refs.img, mat); // load cv result to canvas (processed image)
-          console.log('contrast adjustments time : '+(new Date().getTime()-start));
-          this.remoteDecode('contrast adjustments '+alpha);
+          // const start = new Date().getTime();
+          // let alpha = 3; /*< Simple contrast control ,range : 0 to infinite */
+          // let beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
+          // mat.convertTo(mat, -1, alpha, beta);
+          // this.cv.imshow(this.$refs.img, mat); // load cv result to canvas (processed image)
+          // console.log('contrast adjustments time : ' + (new Date().getTime()-start));
+          // this.remoteDecode('contrast adjustments '+alpha);
 
           //--------------- Histogram solution part
           // let dst = new this.cv.Mat();
@@ -356,6 +359,24 @@ export default {
           // this.cv.equalizeHist(mat, dst);
           // this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
           // this.remoteDecode('equalizeHist');
+          
+
+
+          //BINARY INVERSION
+          let dst = new this.cv.Mat();
+          this.cv.threshold(mat, dst, 127, 255, this.cv.THRESH_BINARY);
+          // this.cv.imshow(this.$refs.img, dst);
+          console.log("Test")
+          // mat.delete();
+          // dst.delete();
+          
+          let M = this.cv.Mat.ones(5, 5, this.cv.CV_8U);
+          // You can try more different parameters
+          this.cv.morphologyEx(dst, dst, this.cv.MORPH_CLOSE, M);
+          this.cv.imshow(this.$refs.img, dst);
+          // src.delete(); dst.delete(); M.delete();
+
+
         }
       } else {
         setTimeout(() => {this.opencvCompute()}, 1000);
@@ -400,6 +421,7 @@ export default {
       // let trCornerData = this.canvas.getContext('2d').getImageData(this.$refs.input_img.width-wh, 0, wh, wh);
       // let blCornerData = this.canvas.getContext('2d').getImageData(0, this.$refs.input_img.height-wh, wh, wh);
       // let brCornerData = this.canvas.getContext('2d').getImageData(this.$refs.input_img.width-wh, this.$refs.input_img.height-wh, wh, wh);
+      this.opencvCompute();
       // this.tl_cursor = this.rectangleDetector(tlCornerData, 'tl');
       // this.tr_cursor = this.rectangleDetector(trCornerData, 'tr');
       // this.bl_cursor = this.rectangleDetector(blCornerData, 'bl');
@@ -415,7 +437,7 @@ export default {
       // this.$refs.bl.getContext("2d").putImageData(blCornerData, 0, 0);
       // this.$refs.br.getContext("2d").putImageData(brCornerData, 0, 0);
       // this.$refs.img.getContext("2d").putImageData(imgData, 0, 0);
-      this.opencvCompute();
+      
     },
   },
 }
