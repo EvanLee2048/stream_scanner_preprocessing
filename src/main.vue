@@ -7,7 +7,7 @@
       <v-row justify="center">
         <v-col class="text-center">
           <p class="text-center text-h4 my-2">Input Image</p>
-         <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/Sample 1.jpg"/>
+<!--         <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/Sample 1.jpg"/>-->
 <!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621237986.jpg"/>-->
 <!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621237992.jpg"/>-->
 <!--          <img ref="input_img" alt="light blur image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621237993.jpg"/>-->
@@ -23,7 +23,7 @@
 <!--          <img ref="input_img" alt="mid dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599061.jpg"/>-->
 
 <!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599074.jpg"/>-->
-<!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599075.jpg"/>-->
+          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599075.jpg"/>
 <!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599076.jpg"/>-->
 <!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599077.jpg"/>-->
 <!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599078.jpg"/>-->
@@ -98,37 +98,18 @@ export default {
       computing: false,
       type: "image/jpeg",
       quality: 0.80,
+      minImageSize: 22000,
     }
   },
   methods: {
     rectangleDetector(image, pos){  //Determine if image is relevant
       let w = image.width;                            
       let h = image.height;
-      let imgData = image.data;                                                 //What data is being stored at imgData ?          ---> 
-      let surface= new Array(w+h-1).fill(0);                                    //What is the surface variable representing ?     --->  45 degree line
-      let grayscaleData = new Array(imgData.length/4);                          //Why is the grayscaleData ---> length/4 ?   ---> Turning into grayscale data
-      let boundary = w/5;        //Looking for edge                                                                //Which boundary is this ?  --->
-      for (let i=0; i<imgData.length; i+=4) {  
-        grayscaleData[i/4] = Math.round(imgData[i]*0.2989+imgData[i+1]*0.587+imgData[i+2]*0.114);
-      }
-      let mean = grayscaleData.reduce((a, b) => a + b, 0) / grayscaleData.length;
-      let sd = Math.sqrt(grayscaleData.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / grayscaleData.length);
-      let binaryData = grayscaleData.map(d => d > mean ? 0 : 1);   //if grayscaleData > mean, then grayscaleData = binaryData ?
-     
-     if(mean < 16){                                                            //The mean determines if the image is too bright or too dim
-        console.log(pos + " too dim");   //Irrelevant 
-        return -100;
-      }
-      if(mean > 239){
-        console.log(pos + " too bright"); //Irrevelant 
-        return -10;
-      }
-      if(sd < 20){
-        console.log(pos + " no content");
-        return -999;
-      }
+      let surface= new Array(w+h-1).fill(0);    //What is the surface variable representing ?     --->  45 degree line
+      let boundary = w/5;        //Looking for edge              //Which boundary is this ?  --->
+      let binaryData = image.data.filter((n,idx) => idx%4===0).map(d => d > 127 ? 0 : 1);
+
       if (pos==='tl') {
-        this.tl_mean = mean;
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
@@ -136,7 +117,6 @@ export default {
           }
         }
       } else if (pos==='tr') {
-        this.tr_mean = mean;
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
@@ -144,7 +124,6 @@ export default {
           }
         }
       } else if (pos==='bl') {
-        this.bl_mean = mean;
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
@@ -152,7 +131,6 @@ export default {
           }
         }
       } else if (pos==='br') {
-        this.br_mean = mean;
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
@@ -163,7 +141,7 @@ export default {
       for (let cursor=boundary; cursor<surface.length-boundary; cursor++) {
         if (surface[cursor] === 1) {
           console.log(pos + " has corner ,cursor : "+cursor);
-          return cursor;
+          // return cursor;
         }
       }
       console.log(pos + " hasn't corner");
@@ -338,6 +316,7 @@ export default {
         if(!this.computing){
           this.computing = true;
           let mat = this.cv.imread(this.canvas); // load source image into cv
+          let dst = new this.cv.Mat();
 
           // let dst = new this.cv.Mat();
 
@@ -345,12 +324,18 @@ export default {
           // https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
 
           //--------------- Brightness and contrast adjustments
-          // const start = new Date().getTime();
-          // let alpha = 3; /*< Simple contrast control ,range : 0 to infinite */
-          // let beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
-          // mat.convertTo(mat, -1, alpha, beta);
-          // this.cv.imshow(this.$refs.img, mat); // load cv result to canvas (processed image)
-          // console.log('contrast adjustments time : ' + (new Date().getTime()-start));
+          let alpha = 3; /*< Simple contrast control ,range : 0 to infinite */
+          let beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
+          mat.convertTo(dst, -1, alpha, beta);
+          this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
+
+          //--------------- Only applies Brightness adjustments if it makes jpeg data bigger
+          let original_jpeg = this.canvas.toDataURL(this.type, this.quality);
+          let brightness_adjustment_jpeg = this.$refs.img.toDataURL(this.type, this.quality);
+          if(brightness_adjustment_jpeg.length > original_jpeg.length*1.2 &&
+              brightness_adjustment_jpeg.length > this.minImageSize){
+            mat = dst;
+          }
           // this.remoteDecode('contrast adjustments '+alpha);
 
           //--------------- Histogram solution part
@@ -359,24 +344,32 @@ export default {
           // this.cv.equalizeHist(mat, dst);
           // this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
           // this.remoteDecode('equalizeHist');
-          
-
 
           //BINARY INVERSION
-          let dst = new this.cv.Mat();
-          this.cv.threshold(mat, dst, 127, 255, this.cv.THRESH_BINARY);
-          // this.cv.imshow(this.$refs.img, dst);
-          console.log("Test")
-          // mat.delete();
-          // dst.delete();
+          this.cv.threshold(mat, mat, 127, 255, this.cv.THRESH_BINARY);
           
           let M = this.cv.Mat.ones(5, 5, this.cv.CV_8U);
           // You can try more different parameters
-          this.cv.morphologyEx(dst, dst, this.cv.MORPH_CLOSE, M);
-          this.cv.imshow(this.$refs.img, dst);
-          // src.delete(); dst.delete(); M.delete();
+          this.cv.morphologyEx(mat, mat, this.cv.MORPH_CLOSE, M);
+          this.cv.imshow(this.$refs.img, mat);
 
-
+          const wh = 2*this.cornerSize;
+          let tlCornerData = this.$refs.img.getContext('2d').getImageData(0, 0, wh, wh);       //Makes sure browser can handle the image
+          let trCornerData = this.$refs.img.getContext('2d').getImageData(this.$refs.img.width-wh, 0, wh, wh);
+          let blCornerData = this.$refs.img.getContext('2d').getImageData(0, this.$refs.img.height-wh, wh, wh);
+          let brCornerData = this.$refs.img.getContext('2d').getImageData(this.$refs.img.width-wh, this.$refs.img.height-wh, wh, wh);
+          this.tl_cursor = this.rectangleDetector(tlCornerData, 'tl');
+          this.tr_cursor = this.rectangleDetector(trCornerData, 'tr');
+          this.bl_cursor = this.rectangleDetector(blCornerData, 'bl');
+          this.br_cursor = this.rectangleDetector(brCornerData, 'br');
+          this.drawCursor(tlCornerData, this.tl_cursor, 'tl');
+          this.drawCursor(trCornerData, this.tr_cursor, 'tr');
+          this.drawCursor(blCornerData, this.bl_cursor, 'bl');
+          this.drawCursor(brCornerData, this.br_cursor, 'br');
+          this.$refs.tl.getContext("2d").putImageData(tlCornerData, 0, 0);
+          this.$refs.tr.getContext("2d").putImageData(trCornerData, 0, 0);
+          this.$refs.bl.getContext("2d").putImageData(blCornerData, 0, 0);
+          this.$refs.br.getContext("2d").putImageData(brCornerData, 0, 0);
         }
       } else {
         setTimeout(() => {this.opencvCompute()}, 1000);
@@ -384,8 +377,7 @@ export default {
       }
     },
     remoteDecode(msg){
-      this.canvas.getContext('2d').drawImage(this.$refs.img,0,0);
-      const img = this.canvas.toDataURL(this.type, this.quality);
+      const img = this.$refs.img.toDataURL(this.type, this.quality);
       console.log(msg+' size : '+JSON.stringify(img.length));
       let config = {
         url:`https://dev.gaccai.com/decode`,
