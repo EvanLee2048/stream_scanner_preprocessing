@@ -17,15 +17,15 @@
 <!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239347.jpg"/>-->
 <!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239427.jpg"/>-->
 <!--          <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239823.jpg"/>-->
-          <!-- <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239824.jpg"/> -->
+<!--           <img ref="input_img" alt="light image" style="width: 320px; height: 320px;" @load="init" src="@/test/1621239824.jpg"/>-->
 
 <!--          <img ref="input_img" alt="mid dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599060.jpg"/>-->
 <!--          <img ref="input_img" alt="mid dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599061.jpg"/>-->
 
 <!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599074.jpg"/>-->
-          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599075.jpg"/>
+<!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599075.jpg"/>-->
 <!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599076.jpg"/>-->
-<!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599077.jpg"/>-->
+          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599077.jpg"/>
 <!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599078.jpg"/>-->
 <!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599079.jpg"/>-->
 <!--          <img ref="input_img" alt="dark blur image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599086.jpg"/>-->
@@ -41,13 +41,11 @@
         <v-col class="text-center">
           <p>Top Left Corner</p>
           <p>Corner : {{tl_cursor}}</p>
-          <p>Mean : {{tl_mean}}</p>
           <canvas ref="tl" width="60" height="60"></canvas>
         </v-col>
         <v-col class="text-center">
           <p>Top Right Corner</p>
           <p>Corner : {{tr_cursor}}</p>
-          <p>Mean : {{tr_mean}}</p>
           <canvas ref="tr" width="60" height="60"></canvas>
         </v-col>
         <v-col>
@@ -59,13 +57,11 @@
         <v-col class="text-center">
           <p>Bottom Left Corner</p>
           <p>Corner : {{bl_cursor}}</p>
-          <p>Mean : {{bl_mean}}</p>
           <canvas ref="bl" width="60" height="60"></canvas>
         </v-col>
         <v-col class="text-center">
           <p>Bottom Right Corner</p>
           <p>Corner : {{br_cursor}}</p>
-          <p>Mean : {{br_mean}}</p>
           <canvas ref="br" width="60" height="60"></canvas>
         </v-col>
         <v-col>
@@ -90,10 +86,6 @@ export default {
       tr_cursor: 0,
       bl_cursor: 0,
       br_cursor: 0,
-      tl_mean: 0,
-      tr_mean: 0,
-      bl_mean: 0,
-      br_mean: 0,
       cv: null,
       computing: false,
       type: "image/jpeg",
@@ -109,28 +101,28 @@ export default {
       let boundary = w/5;        //Looking for edge              //Which boundary is this ?  --->
       let binaryData = image.data.filter((n,idx) => idx%4===0).map(d => d > 127 ? 0 : 1);
 
-      if (pos==='tl') {
+      if (pos==='tl') { // surface direction : from top left to bottom right
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
             surface[y + x] += binaryData[yw + x];
           }
         }
-      } else if (pos==='tr') {
+      } else if (pos==='tr') { // surface direction : from top right to bottom left
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
             surface[w - 1 - x + y] += binaryData[yw + x];
           }
         }
-      } else if (pos==='bl') {
+      } else if (pos==='bl') { // surface direction : from bottom left to top right
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
             surface[surface.length - w + x - y] += binaryData[yw + x];
           }
         }
-      } else if (pos==='br') {
+      } else if (pos==='br') { // surface direction : from bottom right to top left
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
@@ -138,10 +130,11 @@ export default {
           }
         }
       }
+      console.log(pos + " surface : " + JSON.stringify(surface.slice(boundary, surface.length-boundary)));
       for (let cursor=boundary; cursor<surface.length-boundary; cursor++) {
-        if (surface[cursor] === 1) {
+        if (surface[cursor] === 0 && surface[cursor+1] > 0) {
           console.log(pos + " has corner ,cursor : "+cursor);
-          // return cursor;
+          return cursor;
         }
       }
       console.log(pos + " hasn't corner");
@@ -154,6 +147,9 @@ export default {
         return
       }
       if (pos==='tl' || pos==='br') {
+        if (pos==='br') {
+          cursor = wh+wh-1 - cursor;
+        }
         for (var i=0; i<arr.length; i+=4) {
           var y = Math.floor(i/4/wh);
           var x = i/4%wh;
@@ -162,6 +158,9 @@ export default {
           }
         }
       } else {
+        if (pos==='bl') {
+          cursor = wh+wh-1 - cursor;
+        }
         for (var I=0; I<arr.length; I+=4) {
           var Y = Math.floor(I/4/wh);
           var X = I/4%wh;
@@ -373,7 +372,6 @@ export default {
         }
       } else {
         setTimeout(() => {this.opencvCompute()}, 1000);
-        // console.log("opencv not loaded");
       }
     },
     remoteDecode(msg){
@@ -407,27 +405,10 @@ export default {
       let imgData = this.canvas.getContext('2d').getImageData(0, 0, this.$refs.input_img.width, this.$refs.input_img.height);
       this.$refs.img.getContext("2d").putImageData(imgData, 0, 0);
       this.remoteDecode('original');
-      // const wh = 2*this.cornerSize;
-      // let imgData = this.canvas.getContext('2d').getImageData(0, 0, this.$refs.input_img.width, this.$refs.input_img.height);
-      // let tlCornerData = this.canvas.getContext('2d').getImageData(0, 0, wh, wh);       //Makes sure browser can handle the image
-      // let trCornerData = this.canvas.getContext('2d').getImageData(this.$refs.input_img.width-wh, 0, wh, wh);
-      // let blCornerData = this.canvas.getContext('2d').getImageData(0, this.$refs.input_img.height-wh, wh, wh);
-      // let brCornerData = this.canvas.getContext('2d').getImageData(this.$refs.input_img.width-wh, this.$refs.input_img.height-wh, wh, wh);
       this.opencvCompute();
-      // this.tl_cursor = this.rectangleDetector(tlCornerData, 'tl');
-      // this.tr_cursor = this.rectangleDetector(trCornerData, 'tr');
-      // this.bl_cursor = this.rectangleDetector(blCornerData, 'bl');
-      // this.br_cursor = this.rectangleDetector(brCornerData, 'br');
+      // let imgData = this.canvas.getContext('2d').getImageData(0, 0, this.$refs.input_img.width, this.$refs.input_img.height);
       // this.lightSpot(imgData.data, imgData.width);
-      // this.drawCursor(tlCornerData, this.tl_cursor, 'tl');
-      // this.drawCursor(trCornerData, this.tr_cursor, 'tr');
-      // this.drawCursor(blCornerData, this.bl_cursor, 'bl');
-      // this.drawCursor(brCornerData, this.br_cursor, 'br');
       // this.drawCorner(imgData);
-      // this.$refs.tl.getContext("2d").putImageData(tlCornerData, 0, 0);
-      // this.$refs.tr.getContext("2d").putImageData(trCornerData, 0, 0);
-      // this.$refs.bl.getContext("2d").putImageData(blCornerData, 0, 0);
-      // this.$refs.br.getContext("2d").putImageData(brCornerData, 0, 0);
       // this.$refs.img.getContext("2d").putImageData(imgData, 0, 0);
       
     },
