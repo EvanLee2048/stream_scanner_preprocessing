@@ -130,9 +130,8 @@ export default {
           }
         }
       }
-      console.log(pos + " surface : " + JSON.stringify(surface.slice(boundary, surface.length-boundary)));
       for (let cursor=boundary; cursor<surface.length-boundary; cursor++) {
-        if (surface[cursor] === 0 && surface[cursor+1] > 0) {
+        if (surface[cursor] === 0 && surface[cursor+1] > 0 && surface[cursor+1] < 3) {
           console.log(pos + " has corner ,cursor : "+cursor);
           return cursor;
         }
@@ -170,7 +169,7 @@ export default {
         }
       }
     },
-    drawCorner(image){                 //Drawing the blue line on the corners ----> Scanning for black square on corners 
+    drawCorner(image){ //Drawing the blue line on the corners ----> Scanning for black square on corners
       const wh = 2*this.cornerSize;
       const imageWH = image.width;
       for (var i=0; i<image.data.length; i+=4) {
