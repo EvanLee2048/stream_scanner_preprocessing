@@ -25,14 +25,17 @@
 <!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599074.jpg"/>-->
 <!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599075.jpg"/>-->
 <!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599076.jpg"/>-->
-          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599077.jpg"/>
+<!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599077.jpg"/>-->
 <!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599078.jpg"/>-->
 <!--          <img ref="input_img" alt="dark image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599079.jpg"/>-->
 <!--          <img ref="input_img" alt="dark blur image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599086.jpg"/>-->
+
+
+          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410744.jpg"/>
         </v-col>
         <v-col class="text-center">
           <p class="text-center text-h4 my-2">Processed Image</p>
-          <canvas ref="img" width="320" height="320"></canvas>
+          <canvas ref="img" width="1079" height="1110"></canvas>
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -315,17 +318,17 @@ export default {
           this.computing = true;
           let mat = this.cv.imread(this.canvas); // load source image into cv
           let dst = new this.cv.Mat();
-
-          // let dst = new this.cv.Mat();
+          this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);
+          mat = dst;
 
           // TODO : Your opencv image processing here!!!!!!!!
           // https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
 
           //--------------- Brightness and contrast adjustments
-          let alpha = 3; /*< Simple contrast control ,range : 0 to infinite */
-          let beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
-          mat.convertTo(dst, -1, alpha, beta);
-          this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
+          // let alpha = 3; /*< Simple contrast control ,range : 0 to infinite */
+          // let beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
+          // mat.convertTo(dst, -1, alpha, beta);
+          // this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
 
           //--------------- Only applies Brightness adjustments if it makes jpeg data bigger
           let original_jpeg = this.canvas.toDataURL(this.type, this.quality);
@@ -344,11 +347,12 @@ export default {
           // this.remoteDecode('equalizeHist');
 
           //BINARY INVERSION
+          // this.cv.threshold(mat, mat, 200, 255, this.cv.THRESH_BINARY);
           this.cv.threshold(mat, mat, 127, 255, this.cv.THRESH_BINARY);
           
-          let M = this.cv.Mat.ones(5, 5, this.cv.CV_8U);
+          let M = this.cv.Mat.ones(7, 7, this.cv.CV_8U);
           // You can try more different parameters
-          this.cv.morphologyEx(mat, mat, this.cv.MORPH_CLOSE, M);
+          this.cv.morphologyEx(mat, mat, this.cv.MORPH_OPEN, M);
           this.cv.imshow(this.$refs.img, mat);
 
           const wh = 2*this.cornerSize;
