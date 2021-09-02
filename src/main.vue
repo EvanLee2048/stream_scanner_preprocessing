@@ -31,7 +31,13 @@
 <!--          <img ref="input_img" alt="dark blur image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599086.jpg"/>-->
 
 
-          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410744.jpg"/>
+<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410744.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410746.jpg"/>-->
+          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410751.jpg"/>
+<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410757.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410763.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410764.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410765.jpg"/>-->
         </v-col>
         <v-col class="text-center">
           <p class="text-center text-h4 my-2">Processed Image</p>
@@ -315,6 +321,7 @@ export default {
 
       if(this.cv){
         if(!this.computing){
+          let start = new Date().getTime();
           this.computing = true;
           let mat = this.cv.imread(this.canvas); // load source image into cv
           let dst = new this.cv.Mat();
@@ -347,13 +354,51 @@ export default {
           // this.remoteDecode('equalizeHist');
 
           //BINARY INVERSION
-          // this.cv.threshold(mat, mat, 200, 255, this.cv.THRESH_BINARY);
           this.cv.threshold(mat, mat, 127, 255, this.cv.THRESH_BINARY);
-          
           let M = this.cv.Mat.ones(7, 7, this.cv.CV_8U);
-          // You can try more different parameters
           this.cv.morphologyEx(mat, mat, this.cv.MORPH_OPEN, M);
-          this.cv.imshow(this.$refs.img, mat);
+
+          /**
+           * 02 September 2021
+           * https://docs.opencv.org/4.5.2/d5/daa/tutorial_js_contours_begin.html
+           * Contours can be explained simply as a curve joining all the continuous points (along the boundary), having same color or intensity.
+           * The contours are a useful tool for shape analysis and object detection and recognition.
+           * */
+          let contours = new this.cv.MatVector();
+          let hierarchy = new this.cv.Mat();
+          this.cv.findContours(mat, contours, hierarchy, this.cv.RETR_CCOMP, this.cv.CHAIN_APPROX_SIMPLE);
+          let dst2 = this.cv.Mat.zeros(mat.cols, mat.rows, this.cv.CV_8UC3);
+          for (let i = 0; i < contours.size(); ++i) {
+            /**
+             * https://docs.opencv.org/4.5.2/da/dc1/tutorial_js_contour_properties.html
+             * Contours can be explained simply as a curve joining all the continuous points (along the boundary), having same color or intensity.
+             * The contours are a useful tool for shape analysis and object detection and recognition.
+             * */
+            let contour = contours.get(i);
+            let area = this.cv.contourArea(contour, false);
+            /**
+             * aspect ratio of width to height of bounding rect of the object
+             * we are finding square shape, so expect aspect ratio is about to 1
+             * */
+            let rect = this.cv.boundingRect(contour);
+            let aspectRatio = rect.width / rect.height;
+
+            /**
+             * Solidity is the ratio of contour area to its convex hull area
+             * filter arbitrary shape objects
+             * */
+            let hull = new this.cv.Mat();
+            this.cv.convexHull(contour, hull, false, true);
+            let hullArea = this.cv.contourArea(hull, false);
+            let solidity = area / hullArea;
+
+            if(area > 150 && area < 600 && aspectRatio > 0.75 && aspectRatio < 1.5 && solidity > 0.85){
+              this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100);
+              console.log(area);
+            }
+          }
+          console.log((new Date().getTime()-start));
+          this.cv.imshow(this.$refs.img, dst2);
 
           const wh = 2*this.cornerSize;
           let tlCornerData = this.$refs.img.getContext('2d').getImageData(0, 0, wh, wh);       //Makes sure browser can handle the image
