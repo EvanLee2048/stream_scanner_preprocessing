@@ -33,8 +33,8 @@
 
 <!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410744.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410746.jpg"/>-->
-          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410751.jpg"/>
-<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410757.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410751.jpg"/>-->
+          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410757.jpg"/>
 <!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410763.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410764.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410765.jpg"/>-->
@@ -392,7 +392,7 @@ export default {
             let hullArea = this.cv.contourArea(hull, false);
             let solidity = area / hullArea;
 
-            if(area > 150 && area < 600 && aspectRatio > 0.75 && aspectRatio < 1.5 && solidity > 0.85){
+            if(area > 150 && area < 600 && aspectRatio > 0.5 && aspectRatio < 1.5 && solidity > 0.85){
               this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100);
               console.log(area);
             }
