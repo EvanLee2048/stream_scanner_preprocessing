@@ -379,8 +379,9 @@ export default {
           let hierarchy = new this.cv.Mat();
           this.cv.findContours(mat, contours, hierarchy, this.cv.RETR_CCOMP, this.cv.CHAIN_APPROX_SIMPLE);
           let dst2 = this.cv.Mat.zeros(mat.cols, mat.rows, this.cv.CV_8UC3);
-          var x_coordinate = [];
-          var y_coordinate = [];
+          let contour_position = [];
+          let x_coordinate = [];
+          let y_coordinate = [];
           for (let i = 0; i < contours.size(); ++i) {
             /**
              * https://docs.opencv.org/4.5.2/da/dc1/tutorial_js_contour_properties.html
@@ -389,13 +390,13 @@ export default {
              * */
             let contour = contours.get(i);
             let area = this.cv.contourArea(contour, false);
+
             /**
              * aspect ratio of width to height of bounding rect of the object
              * we are finding square shape, so expect aspect ratio is about to 1
              * */
             let rect = this.cv.boundingRect(contour);
             let aspectRatio = rect.width / rect.height;
-
             /**
              * Solidity is the ratio of contour area to its convex hull area
              * filter arbitrary shape objects
@@ -405,38 +406,50 @@ export default {
             this.cv.convexHull(contour, hull, false, true);
             let hullArea = this.cv.contourArea(hull, false);
             let solidity = area / hullArea;
-            
+
             if(area > 100 && area < 400 && aspectRatio > 0.7 && aspectRatio < 1.3 && solidity > 0.70){
-              let M = this.cv.moments(contour)
-              let cx = parseInt(M.m10/M.m00)
-              let cy = parseInt(M.m01/M.m00)
+              let M = this.cv.moments(contour);
+              let cx = parseInt(M.m10/M.m00);
+              let cy = parseInt(M.m01/M.m00);
               x_coordinate.push(cx);
               y_coordinate.push(cy);
-              this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100);
+              contour_position.push({x: cx, y: cy, i:i});
+              // this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100);
             }
           }
 
           let lines = [];
-          for (let i=0; i<x_coordinate.length; ++i){
-            for (let j=i+1; j<x_coordinate.length; ++j){
-              let m = (y_coordinate[j]-y_coordinate[i] )/(x_coordinate[j]-x_coordinate[i]);
+          for (let i=0; i<contour_position.length; ++i){
+            for (let j=i+1; j<contour_position.length; ++j){
+              let m = (contour_position[j].y-contour_position[i].y)/(contour_position[j].x-contour_position[i].x);
               let angle = Math.atan(m) * (180/Math.PI);
               //Put the length condition here
-              let distance = ((x_coordinate[i]-x_coordinate[j])**2 + (y_coordinate[i]-y_coordinate[j])**2)**0.5;
+              let distance = ((contour_position[i].x-contour_position[j].x)**2 + (contour_position[i].y-contour_position[j].y)**2)**0.5;
               if (distance > 100 && distance < 400){
-                lines.push({line:[i,j], a: angle, d: distance});
-              }       
+                lines.push({line:[contour_position[i].i,contour_position[j].i], a: angle, d: distance});
+              }
             }
           }
           let parallel_lines = [];
           for (let i=0; i<lines.length; ++i){
-            let line = lines[i];
-            let parallel_line = lines.filter((l, idx) => idx!==i && (Math.abs(l.a-line.a) < 3) && Math.abs(l.d - line.d) < 10);
+            let line1 = lines[i];
+            let parallel_line = lines.filter((l, idx) => idx!==i && Math.abs(l.a-line1.a) < 5 && Math.abs(l.d - line1.d) < 10);
             if(parallel_line.length>0){
-              parallel_lines.push(parallel_line);
+              // let line2 = parallel_line[0];
+
+              parallel_lines.push(...parallel_line);
+              parallel_line[0].line.forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100));
+              // parallel_lines.push([line1,line2]);
             }
           }
+          parallel_lines = Array.from(new Set(parallel_lines));
           console.log(parallel_lines);
+          // for (let i=0; i<parallel_lines.length; ++i){
+          //   let l1 = parallel_lines[i];
+          //   if(parallel_line.length>0){
+          //     parallel_lines.push(...parallel_line);
+          //   }
+          // }
 
           // for (let i=0; i<line_data.length; ++i){
           //   for (let j=i+1; j<line_data.length; ++j){
@@ -470,8 +483,6 @@ export default {
         setTimeout(() => {this.opencvCompute()}, 1000);
       }
     },
-
-
     remoteDecode(msg){
       const img = this.$refs.img.toDataURL(this.type, this.quality);
       console.log(msg+' size : '+JSON.stringify(img.length));
@@ -514,8 +525,3 @@ export default {
 
 <style scoped>
 </style>
-
-
-
-
-
