@@ -31,17 +31,30 @@
 <!--          <img ref="input_img" alt="dark blur image" style="width: 320px; height: 320px;" @load="init" src="@/test/1626599086.jpg"/>-->
 
 
-<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410744.jpg"/>-->
-<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410746.jpg"/>-->
-<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410751.jpg"/>-->
-          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410757.jpg"/>
-<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410763.jpg"/>-->
-<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410764.jpg"/>-->
-<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410765.jpg"/>-->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410678.jpg"/> -->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410679.jpg"/> -->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410684.jpg"/> -->
+          <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410686.jpg"/> -->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410693.jpg"/> -->
+<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410698.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410726.jpg"/>-->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410732.jpg"/> -->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410733.jpg"/> -->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410736.jpg"/> -->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410744.jpg"/> -->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410746.jpg"/> -->
+         <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410751.jpg"/>
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410757.jpg"/> -->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410763.jpg"/> -->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410764.jpg"/> -->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410765.jpg"/> -->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410766.jpg"/> -->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410768.jpg"/> -->
+         <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410782.jpg"/> -->
         </v-col>
         <v-col class="text-center">
           <p class="text-center text-h4 my-2">Processed Image</p>
-          <canvas ref="img" width="1079" height="1110"></canvas>
+          <canvas ref="img" width="1079" height="1110"></canvas>    <!-- Shows the output image, canvas -->  
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -145,7 +158,7 @@ export default {
           return cursor;
         }
       }
-      console.log(pos + " hasn't corner");
+      // console.log(pos + " hasn't corner");
       return -1;
     },
     drawCursor(img, cursor, pos){
@@ -319,12 +332,15 @@ export default {
         setTimeout(() => {this.opencvCompute()}, 100);
       }
 
+
       if(this.cv){
         if(!this.computing){
           let start = new Date().getTime();
           this.computing = true;
           let mat = this.cv.imread(this.canvas); // load source image into cv
-          let dst = new this.cv.Mat();
+          let dst = new this.cv.Mat();           // Creating a new copy of the cv.
+
+
           this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);
           mat = dst;
 
@@ -358,6 +374,7 @@ export default {
           let M = this.cv.Mat.ones(7, 7, this.cv.CV_8U);
           this.cv.morphologyEx(mat, mat, this.cv.MORPH_OPEN, M);
 
+          this.cv.imshow(this.$refs.img, mat);
           /**
            * 02 September 2021
            * https://docs.opencv.org/4.5.2/d5/daa/tutorial_js_contours_begin.html
@@ -367,7 +384,15 @@ export default {
           let contours = new this.cv.MatVector();
           let hierarchy = new this.cv.Mat();
           this.cv.findContours(mat, contours, hierarchy, this.cv.RETR_CCOMP, this.cv.CHAIN_APPROX_SIMPLE);
+
+        
           let dst2 = this.cv.Mat.zeros(mat.cols, mat.rows, this.cv.CV_8UC3);
+          
+          
+          var x_coordinate = [];
+          var y_coordinate = [];
+          // var distance_contour = [];
+
           for (let i = 0; i < contours.size(); ++i) {
             /**
              * https://docs.opencv.org/4.5.2/da/dc1/tutorial_js_contour_properties.html
@@ -387,18 +412,98 @@ export default {
              * Solidity is the ratio of contour area to its convex hull area
              * filter arbitrary shape objects
              * */
+
             let hull = new this.cv.Mat();
             this.cv.convexHull(contour, hull, false, true);
             let hullArea = this.cv.contourArea(hull, false);
             let solidity = area / hullArea;
 
-            if(area > 150 && area < 600 && aspectRatio > 0.5 && aspectRatio < 1.5 && solidity > 0.85){
+            // this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100);
+
+
+            if(area > 100 && area < 400 && aspectRatio > 0.7 && aspectRatio < 1.3 && solidity > 0.70){
+              
+
+              let M = this.cv.moments(contour)
+
+              let cx = parseInt(M.m10/M.m00)
+              let cy = parseInt(M.m01/M.m00)        
+
+              x_coordinate.push(cx);
+              y_coordinate.push(cy);
+
+              // console.log("Index", i, "X axis - ", cx, "Y axis - ", cy);
+
               this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100);
-              console.log(area);
+              console.log("Area of ", i, "is ", area);
+
+              
+  
+            }
+            
+          }
+          
+
+
+          // for( let j=0;j<x_coordinate.length-1;j++){
+          //   var x_distance = (x_coordinate[j+1] - x_coordinate[j])**2
+          //   var y_distance = (y_coordinate[j+1] - y_coordinate[j])**2
+            
+          //   var distance = (x_distance + y_distance)**0.5
+
+          //   distance_contour.push(distance);
+          // }
+
+          let line_data = [];
+
+          for( let i=0; i<x_coordinate.length; ++i){
+            for (let j=i+1; j<x_coordinate.length; ++j){
+              let m = (y_coordinate[j] - y_coordinate[i] )/(x_coordinate[j] - x_coordinate[i]) 
+              var pi = Math.PI;
+              let angle = Math.atan(m) * (180/pi)
+              
+              // let x = i + " and " + j  // i and j are my line points
+              
+              
+              //Put the length condition here
+
+              var x_distance = (x_coordinate[i] - x_coordinate[j])**2
+              var y_distance = (y_coordinate[i] - y_coordinate[j])**2
+              
+              var distance = (x_distance + y_distance)**0.5
+
+              if (distance > 100 && distance < 400){
+                line_data.push({line:[i,j], a: angle, d: distance});
+
+                console.log("Angle of line", i, " and ", j, " is ", angle, "and distance is", distance);
+              }       
             }
           }
-          console.log((new Date().getTime()-start));
-          this.cv.imshow(this.$refs.img, dst2);
+
+          // var points_arr = [];
+
+          // console.log(line_data[11].a - line_data[14].a)
+
+          for (let i=0; i<line_data.length; ++i){
+            for (let j=i+1; j<line_data.length; ++j){
+              if(line_data[i].a - line_data[j].a < 1  && line_data[i].a - line_data[j].a > -1 && line_data[i].d - line_data[j].d < 5 && line_data[i].d - line_data[j].d > -5){
+
+                // console.log(line_data[i].d - line_data[j].d)
+                console.log( "Points are  - ", line_data[i].line, "and", line_data[j].line)
+              }
+            }
+
+          }
+
+          console.log(line_data);
+
+          console.log("x - coordinate", x_coordinate);
+          console.log("y - coordinate", y_coordinate);
+          // console.log("Distance", distance_contour);
+
+
+          console.log(("Time taken - ", new Date().getTime()-start));
+          this.cv.imshow(this.$refs.img, dst2);                            //this.$refs.img ----> ref to "canvas" element named "img"
 
           const wh = 2*this.cornerSize;
           let tlCornerData = this.$refs.img.getContext('2d').getImageData(0, 0, wh, wh);       //Makes sure browser can handle the image
@@ -422,6 +527,8 @@ export default {
         setTimeout(() => {this.opencvCompute()}, 1000);
       }
     },
+
+
     remoteDecode(msg){
       const img = this.$refs.img.toDataURL(this.type, this.quality);
       console.log(msg+' size : '+JSON.stringify(img.length));
@@ -441,6 +548,8 @@ export default {
           .then(response => console.log(msg+' decode message : '+JSON.stringify(response.data)))
           .catch(err => console.log(msg+' error : '+JSON.stringify(err)));
     },
+
+    
     init(){
       this.canvas.width = this.$refs.input_img.width;
       this.canvas.height = this.$refs.input_img.height;
