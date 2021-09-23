@@ -435,29 +435,20 @@ export default {
             let line1 = lines[i];
             let parallel_line = lines.filter((l, idx) => idx!==i && Math.abs(l.a-line1.a) < 5 && Math.abs(l.d - line1.d) < 10);
             if(parallel_line.length>0){
-              // let line2 = parallel_line[0];
-
               parallel_lines.push(...parallel_line);
-              parallel_line[0].line.forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100));
-              // parallel_lines.push([line1,line2]);
+              parallel_line.forEach(p=> p.line.forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100)));
             }
           }
-          parallel_lines = Array.from(new Set(parallel_lines));
-          console.log(parallel_lines);
-          // for (let i=0; i<parallel_lines.length; ++i){
-          //   let l1 = parallel_lines[i];
-          //   if(parallel_line.length>0){
-          //     parallel_lines.push(...parallel_line);
-          //   }
-          // }
+          let perpendicular = false;
+          let l1 = parallel_lines[0];
+          for (let i=1; i<parallel_lines.length; ++i){
+            if (l1.line.some(r=> parallel_lines[i].line.includes(r)) && Math.abs(l1.a-parallel_lines[i].a) > 85 && Math.abs(l1.a-parallel_lines[i].a) < 95){
+              perpendicular = true;
+              break;
+            }
+          }
+          console.log("perpendicular : ", perpendicular);
 
-          // for (let i=0; i<line_data.length; ++i){
-          //   for (let j=i+1; j<line_data.length; ++j){
-          //     if(line_data[i].a - line_data[j].a < 1  && line_data[i].a - line_data[j].a > -1 && line_data[i].d - line_data[j].d < 5 && line_data[i].d - line_data[j].d > -5){
-          //       console.log( "Points are  - ", line_data[i].line, "and", line_data[j].line);
-          //     }
-          //   }
-          // }
           console.log("Time taken - ", (new Date().getTime()-start));
           this.cv.imshow(this.$refs.img, dst2); //this.$refs.img ----> ref to "canvas" element named "img"
 
