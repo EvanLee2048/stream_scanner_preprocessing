@@ -472,17 +472,17 @@ export default {
               
               var distance = (x_distance + y_distance)**0.5
 
-              if (distance > 100 && distance < 400){
+              if (distance > 50 && distance < 400){
                 line_data.push({line:[i,j], a: angle, d: distance});
 
-                console.log("Angle of line", i, " and ", j, " is ", angle, "and distance is", distance);
+                console.log("Angle of line with points", i, " and ", j, " is ", angle, "and distance is", distance);
               }       
             }
           }
 
           // var points_arr = [];
 
-          // console.log(line_data[11].a - line_data[14].a)
+          console.log(line_data[11].a - line_data[14].a)
 
           for (let i=0; i<line_data.length; ++i){
             for (let j=i+1; j<line_data.length; ++j){
@@ -490,6 +490,8 @@ export default {
 
                 // console.log(line_data[i].d - line_data[j].d)
                 console.log( "Points are  - ", line_data[i].line, "and", line_data[j].line)
+
+                console.log("If statement working");
               }
             }
 
@@ -497,8 +499,8 @@ export default {
 
           console.log(line_data);
 
-          console.log("x - coordinate", x_coordinate);
-          console.log("y - coordinate", y_coordinate);
+          // console.log("x - coordinate", x_coordinate);
+          // console.log("y - coordinate", y_coordinate);
           // console.log("Distance", distance_contour);
 
 
