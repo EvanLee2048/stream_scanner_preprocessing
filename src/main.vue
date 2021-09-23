@@ -380,8 +380,6 @@ export default {
           this.cv.findContours(mat, contours, hierarchy, this.cv.RETR_CCOMP, this.cv.CHAIN_APPROX_SIMPLE);
           let dst2 = this.cv.Mat.zeros(mat.cols, mat.rows, this.cv.CV_8UC3);
           let contour_position = [];
-          let x_coordinate = [];
-          let y_coordinate = [];
           for (let i = 0; i < contours.size(); ++i) {
             /**
              * https://docs.opencv.org/4.5.2/da/dc1/tutorial_js_contour_properties.html
@@ -411,9 +409,7 @@ export default {
               let M = this.cv.moments(contour);
               let cx = parseInt(M.m10/M.m00);
               let cy = parseInt(M.m01/M.m00);
-              x_coordinate.push(cx);
-              y_coordinate.push(cy);
-              contour_position.push({x: cx, y: cy, i:i});
+              contour_position.push({x: cx, y: cy, idx:i});
               // this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100);
             }
           }
@@ -426,7 +422,7 @@ export default {
               //Put the length condition here
               let distance = ((contour_position[i].x-contour_position[j].x)**2 + (contour_position[i].y-contour_position[j].y)**2)**0.5;
               if (distance > 100 && distance < 400){
-                lines.push({line:[contour_position[i].i,contour_position[j].i], a: angle, d: distance});
+                lines.push({line:[contour_position[i].idx,contour_position[j].idx], a: angle, d: distance});
               }
             }
           }
