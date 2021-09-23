@@ -303,8 +303,6 @@ export default {
       }
 
       //!!!! New Code --> Bright Spot Detect
-
-
       let median_x = result_x.sort()[Math.floor(result_x.length/2)];  //Purple cursor ---> used to mark the light spot
       let median_y = result_y.sort()[Math.floor(result_y.length/2)];
       for(let x=median_x-4;x<median_x+5; x++){ //Purple
@@ -407,7 +405,7 @@ export default {
             this.cv.convexHull(contour, hull, false, true);
             let hullArea = this.cv.contourArea(hull, false);
             let solidity = area / hullArea;
-
+            
             if(area > 100 && area < 400 && aspectRatio > 0.7 && aspectRatio < 1.3 && solidity > 0.70){
               let M = this.cv.moments(contour)
               let cx = parseInt(M.m10/M.m00)
@@ -418,7 +416,7 @@ export default {
             }
           }
 
-          let line_data = [];
+          let lines = [];
           for (let i=0; i<x_coordinate.length; ++i){
             for (let j=i+1; j<x_coordinate.length; ++j){
               let m = (y_coordinate[j]-y_coordinate[i] )/(x_coordinate[j]-x_coordinate[i]);
@@ -426,14 +424,14 @@ export default {
               //Put the length condition here
               let distance = ((x_coordinate[i]-x_coordinate[j])**2 + (y_coordinate[i]-y_coordinate[j])**2)**0.5;
               if (distance > 100 && distance < 400){
-                line_data.push({line:[i,j], a: angle, d: distance});
+                lines.push({line:[i,j], a: angle, d: distance});
               }       
             }
           }
           let parallel_lines = [];
-          for (let i=0; i<line_data.length; ++i){
-            let line = line_data[i];
-            let parallel_line = line_data.filter((l, idx) => idx!==i && (Math.abs(l.a-line.a) < 3) && Math.abs(l.d - line.d) < 10);
+          for (let i=0; i<lines.length; ++i){
+            let line = lines[i];
+            let parallel_line = lines.filter((l, idx) => idx!==i && (Math.abs(l.a-line.a) < 3) && Math.abs(l.d - line.d) < 10);
             if(parallel_line.length>0){
               parallel_lines.push(parallel_line);
             }
