@@ -303,8 +303,6 @@ export default {
       }
 
       //!!!! New Code --> Bright Spot Detect
-
-
       let median_x = result_x.sort()[Math.floor(result_x.length/2)];  //Purple cursor ---> used to mark the light spot
       let median_y = result_y.sort()[Math.floor(result_y.length/2)];
       for(let x=median_x-4;x<median_x+5; x++){ //Purple
@@ -331,16 +329,12 @@ export default {
       } else if(!this.cv){
         setTimeout(() => {this.opencvCompute()}, 100);
       }
-
-
       if(this.cv){
         if(!this.computing){
           let start = new Date().getTime();
           this.computing = true;
           let mat = this.cv.imread(this.canvas); // load source image into cv
           let dst = new this.cv.Mat();           // Creating a new copy of the cv.
-
-
           this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);
           mat = dst;
 
@@ -384,15 +378,10 @@ export default {
           let contours = new this.cv.MatVector();
           let hierarchy = new this.cv.Mat();
           this.cv.findContours(mat, contours, hierarchy, this.cv.RETR_CCOMP, this.cv.CHAIN_APPROX_SIMPLE);
-
-        
           let dst2 = this.cv.Mat.zeros(mat.cols, mat.rows, this.cv.CV_8UC3);
-          
-          
-          var x_coordinate = [];
-          var y_coordinate = [];
-          // var distance_contour = [];
-
+          let contour_position = [];
+          let x_coordinate = [];
+          let y_coordinate = [];
           for (let i = 0; i < contours.size(); ++i) {
             /**
              * https://docs.opencv.org/4.5.2/da/dc1/tutorial_js_contour_properties.html
@@ -401,13 +390,13 @@ export default {
              * */
             let contour = contours.get(i);
             let area = this.cv.contourArea(contour, false);
+
             /**
              * aspect ratio of width to height of bounding rect of the object
              * we are finding square shape, so expect aspect ratio is about to 1
              * */
             let rect = this.cv.boundingRect(contour);
             let aspectRatio = rect.width / rect.height;
-
             /**
              * Solidity is the ratio of contour area to its convex hull area
              * filter arbitrary shape objects
@@ -418,94 +407,59 @@ export default {
             let hullArea = this.cv.contourArea(hull, false);
             let solidity = area / hullArea;
 
-            // this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100);
-
-
             if(area > 100 && area < 400 && aspectRatio > 0.7 && aspectRatio < 1.3 && solidity > 0.70){
-              
-
-              let M = this.cv.moments(contour)
-
-              let cx = parseInt(M.m10/M.m00)
-              let cy = parseInt(M.m01/M.m00)        
-
+              let M = this.cv.moments(contour);
+              let cx = parseInt(M.m10/M.m00);
+              let cy = parseInt(M.m01/M.m00);
               x_coordinate.push(cx);
               y_coordinate.push(cy);
-
-              // console.log("Index", i, "X axis - ", cx, "Y axis - ", cy);
-
-              this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100);
-              console.log("Area of ", i, "is ", area);
-
-              
-  
+              contour_position.push({x: cx, y: cy, i:i});
+              // this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100);
             }
-            
           }
-          
 
-
-          // for( let j=0;j<x_coordinate.length-1;j++){
-          //   var x_distance = (x_coordinate[j+1] - x_coordinate[j])**2
-          //   var y_distance = (y_coordinate[j+1] - y_coordinate[j])**2
-            
-          //   var distance = (x_distance + y_distance)**0.5
-
-          //   distance_contour.push(distance);
-          // }
-
-          let line_data = [];
-
-          for( let i=0; i<x_coordinate.length; ++i){
-            for (let j=i+1; j<x_coordinate.length; ++j){
-              let m = (y_coordinate[j] - y_coordinate[i] )/(x_coordinate[j] - x_coordinate[i]) 
-              var pi = Math.PI;
-              let angle = Math.atan(m) * (180/pi)
-              
-              // let x = i + " and " + j  // i and j are my line points
-              
-              
+          let lines = [];
+          for (let i=0; i<contour_position.length; ++i){
+            for (let j=i+1; j<contour_position.length; ++j){
+              let m = (contour_position[j].y-contour_position[i].y)/(contour_position[j].x-contour_position[i].x);
+              let angle = Math.atan(m) * (180/Math.PI);
               //Put the length condition here
-
-              var x_distance = (x_coordinate[i] - x_coordinate[j])**2
-              var y_distance = (y_coordinate[i] - y_coordinate[j])**2
-              
-              var distance = (x_distance + y_distance)**0.5
-
-              if (distance > 50 && distance < 400){
-                line_data.push({line:[i,j], a: angle, d: distance});
-
-                console.log("Angle of line with points", i, " and ", j, " is ", angle, "and distance is", distance);
-              }       
-            }
-          }
-
-          // var points_arr = [];
-
-          console.log(line_data[11].a - line_data[14].a)
-
-          for (let i=0; i<line_data.length; ++i){
-            for (let j=i+1; j<line_data.length; ++j){
-              if(line_data[i].a - line_data[j].a < 1  && line_data[i].a - line_data[j].a > -1 && line_data[i].d - line_data[j].d < 5 && line_data[i].d - line_data[j].d > -5){
-
-                // console.log(line_data[i].d - line_data[j].d)
-                console.log( "Points are  - ", line_data[i].line, "and", line_data[j].line)
-
-                console.log("If statement working");
+              let distance = ((contour_position[i].x-contour_position[j].x)**2 + (contour_position[i].y-contour_position[j].y)**2)**0.5;
+              if (distance > 100 && distance < 400){
+                lines.push({line:[contour_position[i].i,contour_position[j].i], a: angle, d: distance});
               }
             }
-
           }
+          let parallel_lines = [];
+          for (let i=0; i<lines.length; ++i){
+            let line1 = lines[i];
+            let parallel_line = lines.filter((l, idx) => idx!==i && Math.abs(l.a-line1.a) < 5 && Math.abs(l.d - line1.d) < 10);
+            if(parallel_line.length>0){
+              // let line2 = parallel_line[0];
 
-          console.log(line_data);
+              parallel_lines.push(...parallel_line);
+              parallel_line[0].line.forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100));
+              // parallel_lines.push([line1,line2]);
+            }
+          }
+          parallel_lines = Array.from(new Set(parallel_lines));
+          console.log(parallel_lines);
+          // for (let i=0; i<parallel_lines.length; ++i){
+          //   let l1 = parallel_lines[i];
+          //   if(parallel_line.length>0){
+          //     parallel_lines.push(...parallel_line);
+          //   }
+          // }
 
-          // console.log("x - coordinate", x_coordinate);
-          // console.log("y - coordinate", y_coordinate);
-          // console.log("Distance", distance_contour);
-
-
-          console.log(("Time taken - ", new Date().getTime()-start));
-          this.cv.imshow(this.$refs.img, dst2);                            //this.$refs.img ----> ref to "canvas" element named "img"
+          // for (let i=0; i<line_data.length; ++i){
+          //   for (let j=i+1; j<line_data.length; ++j){
+          //     if(line_data[i].a - line_data[j].a < 1  && line_data[i].a - line_data[j].a > -1 && line_data[i].d - line_data[j].d < 5 && line_data[i].d - line_data[j].d > -5){
+          //       console.log( "Points are  - ", line_data[i].line, "and", line_data[j].line);
+          //     }
+          //   }
+          // }
+          console.log("Time taken - ", (new Date().getTime()-start));
+          this.cv.imshow(this.$refs.img, dst2); //this.$refs.img ----> ref to "canvas" element named "img"
 
           const wh = 2*this.cornerSize;
           let tlCornerData = this.$refs.img.getContext('2d').getImageData(0, 0, wh, wh);       //Makes sure browser can handle the image
@@ -529,8 +483,6 @@ export default {
         setTimeout(() => {this.opencvCompute()}, 1000);
       }
     },
-
-
     remoteDecode(msg){
       const img = this.$refs.img.toDataURL(this.type, this.quality);
       console.log(msg+' size : '+JSON.stringify(img.length));
@@ -550,13 +502,10 @@ export default {
           .then(response => console.log(msg+' decode message : '+JSON.stringify(response.data)))
           .catch(err => console.log(msg+' error : '+JSON.stringify(err)));
     },
-
-    
     init(){
       this.canvas.width = this.$refs.input_img.width;
       this.canvas.height = this.$refs.input_img.height;
       this.canvas.getContext('2d').drawImage(this.$refs.input_img,0,0);
-
       this.axiosInstance = axios.create({
         baseURL: '/',
         timeout: 15000
@@ -569,7 +518,6 @@ export default {
       // this.lightSpot(imgData.data, imgData.width);
       // this.drawCorner(imgData);
       // this.$refs.img.getContext("2d").putImageData(imgData, 0, 0);
-      
     },
   },
 }
@@ -577,8 +525,3 @@ export default {
 
 <style scoped>
 </style>
-
-
-
-
-
