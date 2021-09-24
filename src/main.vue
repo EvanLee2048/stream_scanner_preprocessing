@@ -54,7 +54,9 @@
         </v-col>
         <v-col class="text-center">
           <p class="text-center text-h4 my-2">Processed Image</p>
-          <canvas ref="img" width="1079" height="1110"></canvas>    <!-- Shows the output image, canvas -->  
+          <canvas ref="img" width="1079" height="1110"></canvas>    <!-- Shows the output image, canvas -->
+          <canvas ref="img2" width="500" height="500"></canvas>    <!-- Shows the output image, canvas -->
+          <canvas ref="img3" width="500" height="500"></canvas>    <!-- Shows the output image, canvas -->
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -380,6 +382,7 @@ export default {
           this.cv.findContours(mat, contours, hierarchy, this.cv.RETR_CCOMP, this.cv.CHAIN_APPROX_SIMPLE);
           let dst2 = this.cv.Mat.zeros(mat.cols, mat.rows, this.cv.CV_8UC3);
           let contour_position = [];
+          let lines = [];
           for (let i = 0; i < contours.size(); ++i) {
             /**
              * https://docs.opencv.org/4.5.2/da/dc1/tutorial_js_contour_properties.html
@@ -407,12 +410,13 @@ export default {
 
             if(area > 100 && area < 400 && aspectRatio > 0.7 && aspectRatio < 1.3 && solidity > 0.70){
               let M = this.cv.moments(contour);
-              let cx = parseInt(M.m10/M.m00);
-              let cy = parseInt(M.m01/M.m00);
-              contour_position.push({x: cx, y: cy, idx:i});
+              contour_position.push({
+                x: parseInt(M.m10/M.m00),
+                y: parseInt(M.m01/M.m00),
+                idx: i
+              });
             }
           }
-          let lines = [];
           for (let i=0; i<contour_position.length; ++i){
             for (let j=i+1; j<contour_position.length; ++j){
               let m = (contour_position[j].y-contour_position[i].y)/(contour_position[j].x-contour_position[i].x);
@@ -428,21 +432,39 @@ export default {
           /** filter only parallel lines */
           lines = lines.flatMap((l1, i) => lines.filter((l2, idx) => idx!==i && Math.abs(l2.a-l1.a) < 5 && Math.abs(l2.d - l1.d) < 10));
 
-          /** drawContours */
+          /** drawContours, remove in production */
           new Set(lines.flatMap(l => l.line)).forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100));
+          /** TODO : draw lines ONLY IF the parallel lines finding has poor result*/
 
-          /** is perpendicular */
-          if(lines.some(l2 => lines[0].line.some(r=> l2.line.includes(r)) && Math.abs(lines[0].a-l2.a) > 85 && Math.abs(lines[0].a-l2.a) < 95)){
-            contour_position = contour_position.filter(pos => Array.from(new Set(lines.flatMap(l => l.line))).includes(pos.idx));
-            let min_x = contour_position.map(pos => pos.x).sort()[0];
-            let max_x = contour_position.map(pos => pos.x).sort().pop();
-            let min_y = contour_position.map(pos => pos.y).sort()[0];
-            let max_y = contour_position.map(pos => pos.y).sort().pop();
-            console.log(contour_position);
-            console.log(min_x);
-            console.log(max_x);
-            console.log(min_y);
-            console.log(max_y);
+          if (lines.length >= 4){
+            /** is perpendicular condition : diagonal about 90 angle (tolerance = 5) */
+            if(lines.some(l2 => lines[0].line.some(r=> l2.line.includes(r)) && Math.abs(90-Math.abs(lines[0].a-l2.a)) < 5)){
+              /** filter only the 4 corners */
+              contour_position = contour_position.filter(pos => Array.from(new Set(lines.flatMap(l => l.line))).includes(pos.idx));
+              console.log(contour_position);
+              const cropping_margin = 50;
+              let posX = contour_position.map(pos => pos.x).sort();
+              let posY = contour_position.map(pos => pos.y).sort();
+              let rotateRadian = -lines.map(l => l.a * Math.PI / 180).sort()[0];
+              let cropLength = parseInt(lines.map(l => l.d).sort().pop()+cropping_margin);
+              let min_x = posX[0] - cropping_margin;
+              let max_x = posX.pop() + cropping_margin;
+              let min_y = posY[0] - cropping_margin;
+              let max_y = posY.pop() + cropping_margin;
+
+              /** crop the code out from the whole image */
+              let croppedImg = this.canvas.getContext('2d').getImageData(min_x, min_y, max_x-min_x, max_y-min_y);
+              let img2 = this.$refs.img2.getContext("2d");
+              img2.putImageData(croppedImg, 0, 0);
+              /** TASK : Crop the image then rotate the image then crop it again */
+              img2.rotate(rotateRadian);
+              img2.translate(0,min_y-posY[1]+cropping_margin);
+              img2.drawImage(this.$refs.img2, 0,0);
+              croppedImg = img2.getImageData(parseInt(cropping_margin/2), parseInt(cropping_margin/2), cropLength, cropLength);
+              this.$refs.img3.getContext("2d").putImageData(croppedImg, 0, 0);
+            }
+          } else {
+            console.log('code not found by contour method, upload center part to server');
           }
 
           console.log("Time taken - ", (new Date().getTime()-start));
@@ -471,7 +493,7 @@ export default {
       }
     },
     remoteDecode(msg){
-      const img = this.$refs.img.toDataURL(this.type, this.quality);
+      const img = this.$refs.img3.toDataURL(this.type, this.quality);
       console.log(msg+' size : '+JSON.stringify(img.length));
       let config = {
         url:`https://dev.gaccai.com/decode`,
