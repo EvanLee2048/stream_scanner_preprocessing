@@ -410,10 +410,8 @@ export default {
               let cx = parseInt(M.m10/M.m00);
               let cy = parseInt(M.m01/M.m00);
               contour_position.push({x: cx, y: cy, idx:i});
-              // this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100);
             }
           }
-
           let lines = [];
           for (let i=0; i<contour_position.length; ++i){
             for (let j=i+1; j<contour_position.length; ++j){
@@ -426,24 +424,26 @@ export default {
               }
             }
           }
-          let parallel_lines = [];
-          for (let i=0; i<lines.length; ++i){
-            let line1 = lines[i];
-            let parallel_line = lines.filter((l, idx) => idx!==i && Math.abs(l.a-line1.a) < 5 && Math.abs(l.d - line1.d) < 10);
-            if(parallel_line.length>0){
-              parallel_lines.push(...parallel_line);
-              parallel_line.forEach(p=> p.line.forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100)));
-            }
+
+          /** filter only parallel lines */
+          lines = lines.flatMap((l1, i) => lines.filter((l2, idx) => idx!==i && Math.abs(l2.a-l1.a) < 5 && Math.abs(l2.d - l1.d) < 10));
+
+          /** drawContours */
+          new Set(lines.flatMap(l => l.line)).forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100));
+
+          /** is perpendicular */
+          if(lines.some(l2 => lines[0].line.some(r=> l2.line.includes(r)) && Math.abs(lines[0].a-l2.a) > 85 && Math.abs(lines[0].a-l2.a) < 95)){
+            contour_position = contour_position.filter(pos => Array.from(new Set(lines.flatMap(l => l.line))).includes(pos.idx));
+            let min_x = contour_position.map(pos => pos.x).sort()[0];
+            let max_x = contour_position.map(pos => pos.x).sort().pop();
+            let min_y = contour_position.map(pos => pos.y).sort()[0];
+            let max_y = contour_position.map(pos => pos.y).sort().pop();
+            console.log(contour_position);
+            console.log(min_x);
+            console.log(max_x);
+            console.log(min_y);
+            console.log(max_y);
           }
-          let perpendicular = false;
-          let l1 = parallel_lines[0];
-          for (let i=1; i<parallel_lines.length; ++i){
-            if (l1.line.some(r=> parallel_lines[i].line.includes(r)) && Math.abs(l1.a-parallel_lines[i].a) > 85 && Math.abs(l1.a-parallel_lines[i].a) < 95){
-              perpendicular = true;
-              break;
-            }
-          }
-          console.log("perpendicular : ", perpendicular);
 
           console.log("Time taken - ", (new Date().getTime()-start));
           this.cv.imshow(this.$refs.img, dst2); //this.$refs.img ----> ref to "canvas" element named "img"
