@@ -43,7 +43,7 @@
          <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410736.jpg"/> -->
          <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410744.jpg"/> -->
          <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410746.jpg"/> -->
-         <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410751.jpg"/>
+<!--         <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410751.jpg"/>-->
          <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410757.jpg"/> -->
          <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410763.jpg"/> -->
          <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410764.jpg"/> -->
@@ -51,12 +51,48 @@
          <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410766.jpg"/> -->
          <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410768.jpg"/> -->
          <!-- <img ref="input_img" alt="full image" style="width: 1079px; height: 1110px;" @load="init" src="@/full_screen_images/1630410782.jpg"/> -->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632489635.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632489636.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632489638.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632489639.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490095.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490096.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490097.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490098.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490099.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490100.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490101.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490102.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490103.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490104.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490105.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490106.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490107.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490108.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492375.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492376.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492377.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492378.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492379.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492380.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492381.jpg"/>-->
+          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492382.jpg"/>
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492383.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492384.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492385.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492386.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492387.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492388.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492389.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492390.jpg"/>-->
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492391.jpg"/>-->
         </v-col>
         <v-col class="text-center">
           <p class="text-center text-h4 my-2">Processed Image</p>
-          <canvas ref="img" width="1079" height="1110"></canvas>    <!-- Shows the output image, canvas -->
-          <canvas ref="img2" width="500" height="500"></canvas>    <!-- Shows the output image, canvas -->
-          <canvas ref="img3" width="500" height="500"></canvas>    <!-- Shows the output image, canvas -->
+          <canvas ref="img" width="1110" height="1110"></canvas>    <!-- Shows the output image, canvas -->
+          <canvas ref="img1" width="1110" height="1110"></canvas>    <!-- Shows the output image, canvas -->
+          <canvas ref="img2" width="400" height="400"></canvas>    <!-- Shows the output image, canvas -->
+          <canvas ref="img3" width="320" height="320"></canvas>    <!-- Shows the output image, canvas -->
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -350,12 +386,12 @@ export default {
           // this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
 
           //--------------- Only applies Brightness adjustments if it makes jpeg data bigger
-          let original_jpeg = this.canvas.toDataURL(this.type, this.quality);
-          let brightness_adjustment_jpeg = this.$refs.img.toDataURL(this.type, this.quality);
-          if(brightness_adjustment_jpeg.length > original_jpeg.length*1.2 &&
-              brightness_adjustment_jpeg.length > this.minImageSize){
-            mat = dst;
-          }
+          // let original_jpeg = this.canvas.toDataURL(this.type, this.quality);
+          // let brightness_adjustment_jpeg = this.$refs.img.toDataURL(this.type, this.quality);
+          // if(brightness_adjustment_jpeg.length > original_jpeg.length*1.2 &&
+          //     brightness_adjustment_jpeg.length > this.minImageSize){
+          //   mat = dst;
+          // }
           // this.remoteDecode('contrast adjustments '+alpha);
 
           //--------------- Histogram solution part
@@ -408,13 +444,14 @@ export default {
             let hullArea = this.cv.contourArea(hull, false);
             let solidity = area / hullArea;
 
-            if(area > 100 && area < 400 && aspectRatio > 0.7 && aspectRatio < 1.3 && solidity > 0.70){
+            if(area > 80 && area < 400 && aspectRatio > 0.7 && aspectRatio < 1.3 && solidity > 0.70){
               let M = this.cv.moments(contour);
               contour_position.push({
                 x: parseInt(M.m10/M.m00),
                 y: parseInt(M.m01/M.m00),
                 idx: i
               });
+              this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100)
             }
           }
           for (let i=0; i<contour_position.length; ++i){
@@ -433,7 +470,7 @@ export default {
           lines = lines.flatMap((l1, i) => lines.filter((l2, idx) => idx!==i && Math.abs(l2.a-l1.a) < 5 && Math.abs(l2.d - l1.d) < 10));
 
           /** drawContours, remove in production */
-          new Set(lines.flatMap(l => l.line)).forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100));
+          new Set(lines.flatMap(l => l.line)).forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(0,255,0), 1, this.cv.LINE_8, hierarchy, 100));
           /** TODO : draw lines ONLY IF the parallel lines finding has poor result*/
 
           if (lines.length >= 4){
@@ -442,7 +479,7 @@ export default {
               /** filter only the 4 corners */
               contour_position = contour_position.filter(pos => Array.from(new Set(lines.flatMap(l => l.line))).includes(pos.idx));
               console.log(contour_position);
-              const cropping_margin = 50;
+              const cropping_margin = 60;
               let posX = contour_position.map(pos => pos.x).sort();
               let posY = contour_position.map(pos => pos.y).sort();
               let rotateRadian = -lines.map(l => l.a * Math.PI / 180).sort()[0];
@@ -454,21 +491,39 @@ export default {
 
               /** crop the code out from the whole image */
               let croppedImg = this.canvas.getContext('2d').getImageData(min_x, min_y, max_x-min_x, max_y-min_y);
-              let img2 = this.$refs.img2.getContext("2d");
-              img2.putImageData(croppedImg, 0, 0);
-              /** TASK : Crop the image then rotate the image then crop it again */
-              img2.rotate(rotateRadian);
-              img2.translate(0,min_y-posY[1]+cropping_margin);
-              img2.drawImage(this.$refs.img2, 0,0);
-              croppedImg = img2.getImageData(parseInt(cropping_margin/2), parseInt(cropping_margin/2), cropLength, cropLength);
+
+              let croppedCanvas = document.createElement('canvas');
+              croppedCanvas.width = 400;
+              croppedCanvas.height = 400;
+              croppedCanvas.getContext('2d').putImageData(croppedImg, 0, 0);
+              croppedCanvas.getContext('2d').rotate(rotateRadian);
+              croppedCanvas.getContext('2d').translate(0,min_y-posY[1]+cropping_margin);
+              croppedCanvas.getContext('2d').scale(320/cropLength, 320/cropLength);
+              croppedCanvas.getContext('2d').drawImage(croppedCanvas, 0,0);
+              this.$refs.img2.getContext('2d').drawImage(croppedCanvas, parseInt(cropping_margin/2), parseInt(cropping_margin/2), 320, 320,0,0, 320, 320);
+              croppedImg = croppedCanvas.getContext('2d').getImageData(parseInt(cropping_margin/2), parseInt(cropping_margin/2), 320, 320);
               this.$refs.img3.getContext("2d").putImageData(croppedImg, 0, 0);
+
+              /** use canvas 2 for showing crop & rotate process */
+              // let ctx = this.$refs.img2.getContext("2d");
+              // ctx.putImageData(croppedImg, 0, 0);
+              // /** TASK : Crop the image then rotate the image then crop it again */
+              // ctx.rotate(rotateRadian);
+              // ctx.translate(0,min_y-posY[1]+cropping_margin);
+              // ctx.scale(320/cropLength, 320/cropLength);
+              // ctx.drawImage(this.$refs.img2, 0,0);
+              // croppedImg = ctx.getImageData(parseInt(cropping_margin/2), parseInt(cropping_margin/2), 320, 320);
+              // this.$refs.img3.getContext("2d").putImageData(croppedImg, 0, 0);
+              this.remoteDecode('original');
+            } else {
+              console.log('not perpendicular');
             }
           } else {
             console.log('code not found by contour method, upload center part to server');
           }
 
           console.log("Time taken - ", (new Date().getTime()-start));
-          this.cv.imshow(this.$refs.img, dst2); //this.$refs.img ----> ref to "canvas" element named "img"
+          this.cv.imshow(this.$refs.img1, dst2); //this.$refs.img ----> ref to "canvas" element named "img"
 
           const wh = 2*this.cornerSize;
           let tlCornerData = this.$refs.img.getContext('2d').getImageData(0, 0, wh, wh);       //Makes sure browser can handle the image
@@ -496,8 +551,7 @@ export default {
       const img = this.$refs.img3.toDataURL(this.type, this.quality);
       console.log(msg+' size : '+JSON.stringify(img.length));
       let config = {
-        url:`https://dev.gaccai.com/decode`,
-        headers: {Authorization: `APPCODE 2519302fc8dc4786b94c03c5409788ce`},
+        url:`https://cn-shenzhen-api.gaccai.com/decode`,
         method: 'post',
         data: {
           connection_id: 'connection_id',
@@ -521,7 +575,7 @@ export default {
       });
       let imgData = this.canvas.getContext('2d').getImageData(0, 0, this.$refs.input_img.width, this.$refs.input_img.height);
       this.$refs.img.getContext("2d").putImageData(imgData, 0, 0);
-      this.remoteDecode('original');
+      // this.remoteDecode('original');
       this.opencvCompute();
       // let imgData = this.canvas.getContext('2d').getImageData(0, 0, this.$refs.input_img.width, this.$refs.input_img.height);
       // this.lightSpot(imgData.data, imgData.width);
