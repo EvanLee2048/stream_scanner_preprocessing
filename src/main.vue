@@ -380,8 +380,6 @@ export default {
           this.cv.findContours(mat, contours, hierarchy, this.cv.RETR_CCOMP, this.cv.CHAIN_APPROX_SIMPLE);
           let dst2 = this.cv.Mat.zeros(mat.cols, mat.rows, this.cv.CV_8UC3);
           let contour_position = [];
-          let x_coordinate = [];
-          let y_coordinate = [];
           for (let i = 0; i < contours.size(); ++i) {
             /**
              * https://docs.opencv.org/4.5.2/da/dc1/tutorial_js_contour_properties.html
@@ -411,9 +409,7 @@ export default {
               let M = this.cv.moments(contour);
               let cx = parseInt(M.m10/M.m00);
               let cy = parseInt(M.m01/M.m00);
-              x_coordinate.push(cx);
-              y_coordinate.push(cy);
-              contour_position.push({x: cx, y: cy, i:i});
+              contour_position.push({x: cx, y: cy, idx:i});
               // this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100);
             }
           }
@@ -426,7 +422,7 @@ export default {
               //Put the length condition here
               let distance = ((contour_position[i].x-contour_position[j].x)**2 + (contour_position[i].y-contour_position[j].y)**2)**0.5;
               if (distance > 100 && distance < 400){
-                lines.push({line:[contour_position[i].i,contour_position[j].i], a: angle, d: distance});
+                lines.push({line:[contour_position[i].idx,contour_position[j].idx], a: angle, d: distance});
               }
             }
           }
@@ -435,29 +431,20 @@ export default {
             let line1 = lines[i];
             let parallel_line = lines.filter((l, idx) => idx!==i && Math.abs(l.a-line1.a) < 5 && Math.abs(l.d - line1.d) < 10);
             if(parallel_line.length>0){
-              // let line2 = parallel_line[0];
-
               parallel_lines.push(...parallel_line);
-              parallel_line[0].line.forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100));
-              // parallel_lines.push([line1,line2]);
+              parallel_line.forEach(p=> p.line.forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100)));
             }
           }
-          parallel_lines = Array.from(new Set(parallel_lines));
-          console.log(parallel_lines);
-          // for (let i=0; i<parallel_lines.length; ++i){
-          //   let l1 = parallel_lines[i];
-          //   if(parallel_line.length>0){
-          //     parallel_lines.push(...parallel_line);
-          //   }
-          // }
+          let perpendicular = false;
+          let l1 = parallel_lines[0];
+          for (let i=1; i<parallel_lines.length; ++i){
+            if (l1.line.some(r=> parallel_lines[i].line.includes(r)) && Math.abs(l1.a-parallel_lines[i].a) > 85 && Math.abs(l1.a-parallel_lines[i].a) < 95){
+              perpendicular = true;
+              break;
+            }
+          }
+          console.log("perpendicular : ", perpendicular);
 
-          // for (let i=0; i<line_data.length; ++i){
-          //   for (let j=i+1; j<line_data.length; ++j){
-          //     if(line_data[i].a - line_data[j].a < 1  && line_data[i].a - line_data[j].a > -1 && line_data[i].d - line_data[j].d < 5 && line_data[i].d - line_data[j].d > -5){
-          //       console.log( "Points are  - ", line_data[i].line, "and", line_data[j].line);
-          //     }
-          //   }
-          // }
           console.log("Time taken - ", (new Date().getTime()-start));
           this.cv.imshow(this.$refs.img, dst2); //this.$refs.img ----> ref to "canvas" element named "img"
 
