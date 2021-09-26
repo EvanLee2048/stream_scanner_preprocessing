@@ -76,12 +76,12 @@
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492379.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492380.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492381.jpg"/>-->
-          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492382.jpg"/>
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492382.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492383.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492384.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492385.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492386.jpg"/>-->
-<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492387.jpg"/>-->
+          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492387.jpg"/>
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492388.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492389.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492390.jpg"/>-->
@@ -380,10 +380,10 @@ export default {
           // https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
 
           //--------------- Brightness and contrast adjustments
-          // let alpha = 3; /*< Simple contrast control ,range : 0 to infinite */
-          // let beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
-          // mat.convertTo(dst, -1, alpha, beta);
-          // this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
+          let alpha = 1.2; /*< Simple contrast control ,range : 0 to infinite */
+          let beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
+          mat.convertTo(dst, -1, alpha, beta);
+          this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
 
           //--------------- Only applies Brightness adjustments if it makes jpeg data bigger
           // let original_jpeg = this.canvas.toDataURL(this.type, this.quality);
@@ -444,7 +444,7 @@ export default {
             let hullArea = this.cv.contourArea(hull, false);
             let solidity = area / hullArea;
 
-            if(area > 80 && area < 400 && aspectRatio > 0.7 && aspectRatio < 1.3 && solidity > 0.70){
+            if(area > 20 && area < 400 && aspectRatio > 0.75 && aspectRatio < 1.25 && solidity > 0.75){
               let M = this.cv.moments(contour);
               contour_position.push({
                 x: parseInt(M.m10/M.m00),
@@ -460,18 +460,46 @@ export default {
               let angle = Math.atan(m) * (180/Math.PI);
               //Put the length condition here
               let distance = ((contour_position[i].x-contour_position[j].x)**2 + (contour_position[i].y-contour_position[j].y)**2)**0.5;
-              if (distance > 100 && distance < 400){
+              if (distance > 200 && distance < 400){
                 lines.push({line:[contour_position[i].idx,contour_position[j].idx], a: angle, d: distance});
               }
             }
           }
 
           /** filter only parallel lines */
-          lines = lines.flatMap((l1, i) => lines.filter((l2, idx) => idx!==i && Math.abs(l2.a-l1.a) < 5 && Math.abs(l2.d - l1.d) < 10));
+          lines = lines.flatMap((l1, i) => {
+            let pt11 = contour_position.find(pos => pos.idx === l1.line[0]);
+            let pt12 = contour_position.find(pos => pos.idx === l1.line[1]);
+            let parallelLines = lines.filter((l2, idx) => {
+              let pt21 = contour_position.find(pos => pos.idx === l2.line[0]);
+              let pt22 = contour_position.find(pos => pos.idx === l2.line[1]);
+              return (idx!==i && /** not itself */
+                      !l1.line.some(r=> l2.line.includes(r)) &&
+                      ((pt11.x-pt21.x)**2+(pt11.y-pt21.y)**2)**0.5 > 200 && /** contours not too close */
+                      ((pt11.x-pt22.x)**2+(pt11.y-pt22.y)**2)**0.5 > 200 && /** contours not too close */
+                      ((pt12.x-pt21.x)**2+(pt12.y-pt21.y)**2)**0.5 > 200 && /** contours not too close */
+                      ((pt12.x-pt22.x)**2+(pt12.y-pt22.y)**2)**0.5 > 200 && /** contours not too close */
+                      Math.abs(l2.a-l1.a) < 5 && /** about the same angle */
+                      Math.abs(l2.d-l1.d) < 10)});/** about the same length */
+            if(parallelLines.length>0){
+              console.log("l1 : ", l1.line);
+              console.log("parallelLines : ", parallelLines.map(l2 => l2.line));
+            }
+            return parallelLines;
+          });
+          console.log(lines.map(l => l.line));
 
           /** drawContours, remove in production */
           new Set(lines.flatMap(l => l.line)).forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(0,255,0), 1, this.cv.LINE_8, hierarchy, 100));
           /** TODO : draw lines ONLY IF the parallel lines finding has poor result*/
+          new Set(lines.map(l => l.line)).forEach(l => {
+            let pt1 = contour_position.find(pos => pos.idx === l[0]);
+            let pt2 = contour_position.find(pos => pos.idx === l[1]);
+            this.cv.line(dst2,
+                new this.cv.Point(pt1.x, pt1.y),
+                new this.cv.Point(pt2.x, pt2.y),
+                [0, 0, 255, 255], 1)
+          });
 
           if (lines.length >= 4){
             /** is perpendicular condition : diagonal about 90 angle (tolerance = 5) */
@@ -491,18 +519,19 @@ export default {
 
               /** crop the code out from the whole image */
               let croppedImg = this.canvas.getContext('2d').getImageData(min_x, min_y, max_x-min_x, max_y-min_y);
-
               let croppedCanvas = document.createElement('canvas');
               croppedCanvas.width = 400;
               croppedCanvas.height = 400;
               croppedCanvas.getContext('2d').putImageData(croppedImg, 0, 0);
-              croppedCanvas.getContext('2d').rotate(rotateRadian);
-              croppedCanvas.getContext('2d').translate(0,min_y-posY[1]+cropping_margin);
-              croppedCanvas.getContext('2d').scale(320/cropLength, 320/cropLength);
-              croppedCanvas.getContext('2d').drawImage(croppedCanvas, 0,0);
+              if(rotateRadian > 15 * Math.PI / 180){
+                croppedCanvas.getContext('2d').rotate(rotateRadian);
+                croppedCanvas.getContext('2d').translate(0,min_y-posY[1]+cropping_margin);
+                croppedCanvas.getContext('2d').scale(320/cropLength, 320/cropLength);
+              }
               this.$refs.img2.getContext('2d').drawImage(croppedCanvas, parseInt(cropping_margin/2), parseInt(cropping_margin/2), 320, 320,0,0, 320, 320);
               croppedImg = croppedCanvas.getContext('2d').getImageData(parseInt(cropping_margin/2), parseInt(cropping_margin/2), 320, 320);
               this.$refs.img3.getContext("2d").putImageData(croppedImg, 0, 0);
+
 
               /** use canvas 2 for showing crop & rotate process */
               // let ctx = this.$refs.img2.getContext("2d");
@@ -524,6 +553,12 @@ export default {
 
           console.log("Time taken - ", (new Date().getTime()-start));
           this.cv.imshow(this.$refs.img1, dst2); //this.$refs.img ----> ref to "canvas" element named "img"
+
+          /** draw contour index on canvas javascript */
+          this.$refs.img1.getContext("2d").font = "14px Arial";
+          this.$refs.img1.getContext("2d").fillStyle = "white";
+          this.$refs.img1.getContext("2d").textAlign = "center";
+          contour_position.forEach(pos => this.$refs.img1.getContext("2d").fillText(pos.idx, pos.x, pos.y-4));
 
           const wh = 2*this.cornerSize;
           let tlCornerData = this.$refs.img.getContext('2d').getImageData(0, 0, wh, wh);       //Makes sure browser can handle the image
