@@ -80,8 +80,8 @@
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492383.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492384.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492385.jpg"/>-->
-<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492386.jpg"/>-->
-          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492387.jpg"/>
+          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492386.jpg"/>
+<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492387.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492388.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492389.jpg"/>-->
 <!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492390.jpg"/>-->
@@ -91,7 +91,7 @@
           <p class="text-center text-h4 my-2">Processed Image</p>
           <canvas ref="img" width="1110" height="1110"></canvas>    <!-- Shows the output image, canvas -->
           <canvas ref="img1" width="1110" height="1110"></canvas>    <!-- Shows the output image, canvas -->
-          <canvas ref="img2" width="400" height="400"></canvas>    <!-- Shows the output image, canvas -->
+          <canvas ref="img2" width="480" height="480"></canvas>    <!-- Shows the output image, canvas -->
           <canvas ref="img3" width="320" height="320"></canvas>    <!-- Shows the output image, canvas -->
         </v-col>
       </v-row>
@@ -139,6 +139,7 @@ export default {
   data() {
     return {
       cornerSize: 30,
+      imageSize: 320,
       gaussianRadius: 3,
       gaussCoefficient: [],
       canvas: document.createElement('canvas'),
@@ -369,9 +370,22 @@ export default {
       }
       if(this.cv){
         if(!this.computing){
+          const spaceSize = 480; /** cropped space size */
+          const minLineLength = 150;
+          const maxLineLength = 400;
+          const cropMargin = 30;
+
+          let canvasCv = document.createElement('canvas');
+          let canvasCvCtx = canvasCv.getContext('2d');
+          canvasCv.width = spaceSize;
+          canvasCv.height = spaceSize;
+          const sxSpace = 100;
+          const sySpace = 160;
+          canvasCvCtx.drawImage(this.canvas,sxSpace,sySpace,canvasCv.width,canvasCv.height,0,0,canvasCv.width,canvasCv.height);
+
           let start = new Date().getTime();
           this.computing = true;
-          let mat = this.cv.imread(this.canvas); // load source image into cv
+          let mat = this.cv.imread(canvasCv); // load source image into cv
           let dst = new this.cv.Mat();           // Creating a new copy of the cv.
           this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);
           mat = dst;
@@ -380,10 +394,10 @@ export default {
           // https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
 
           //--------------- Brightness and contrast adjustments
-          let alpha = 1.2; /*< Simple contrast control ,range : 0 to infinite */
-          let beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
-          mat.convertTo(dst, -1, alpha, beta);
-          this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
+          // let alpha = 1.2; /*< Simple contrast control ,range : 0 to infinite */
+          // let beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
+          // mat.convertTo(dst, -1, alpha, beta);
+          // this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
 
           //--------------- Only applies Brightness adjustments if it makes jpeg data bigger
           // let original_jpeg = this.canvas.toDataURL(this.type, this.quality);
@@ -402,7 +416,7 @@ export default {
           // this.remoteDecode('equalizeHist');
 
           //BINARY INVERSION
-          this.cv.threshold(mat, mat, 127, 255, this.cv.THRESH_BINARY);
+          this.cv.threshold(mat, mat, 100, 255, this.cv.THRESH_BINARY);
           let M = this.cv.Mat.ones(7, 7, this.cv.CV_8U);
           this.cv.morphologyEx(mat, mat, this.cv.MORPH_OPEN, M);
 
@@ -417,7 +431,7 @@ export default {
           let hierarchy = new this.cv.Mat();
           this.cv.findContours(mat, contours, hierarchy, this.cv.RETR_CCOMP, this.cv.CHAIN_APPROX_SIMPLE);
           let dst2 = this.cv.Mat.zeros(mat.cols, mat.rows, this.cv.CV_8UC3);
-          let contour_position = [];
+          let contourPositions = [];
           let lines = [];
           for (let i = 0; i < contours.size(); ++i) {
             /**
@@ -446,7 +460,7 @@ export default {
 
             if(area > 20 && area < 400 && aspectRatio > 0.75 && aspectRatio < 1.25 && solidity > 0.75){
               let M = this.cv.moments(contour);
-              contour_position.push({
+              contourPositions.push({
                 x: parseInt(M.m10/M.m00),
                 y: parseInt(M.m01/M.m00),
                 idx: i
@@ -454,101 +468,92 @@ export default {
               this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100)
             }
           }
-          for (let i=0; i<contour_position.length; ++i){
-            for (let j=i+1; j<contour_position.length; ++j){
-              let m = (contour_position[j].y-contour_position[i].y)/(contour_position[j].x-contour_position[i].x);
+          for (let i=0; i<contourPositions.length; ++i){
+            for (let j=i+1; j<contourPositions.length; ++j){
+              let m = (contourPositions[j].y-contourPositions[i].y)/(contourPositions[j].x-contourPositions[i].x);
               let angle = Math.atan(m) * (180/Math.PI);
               //Put the length condition here
-              let distance = ((contour_position[i].x-contour_position[j].x)**2 + (contour_position[i].y-contour_position[j].y)**2)**0.5;
-              if (distance > 200 && distance < 400){
-                lines.push({line:[contour_position[i].idx,contour_position[j].idx], a: angle, d: distance});
+              let distance = ((contourPositions[i].x-contourPositions[j].x)**2 + (contourPositions[i].y-contourPositions[j].y)**2)**0.5;
+              if (distance > minLineLength && distance < maxLineLength){
+                lines.push({line:[contourPositions[i].idx,contourPositions[j].idx], a: angle, d: distance});
               }
             }
           }
-
           /** filter only parallel lines */
           lines = lines.flatMap((l1, i) => {
-            let pt11 = contour_position.find(pos => pos.idx === l1.line[0]);
-            let pt12 = contour_position.find(pos => pos.idx === l1.line[1]);
-            let parallelLines = lines.filter((l2, idx) => {
-              let pt21 = contour_position.find(pos => pos.idx === l2.line[0]);
-              let pt22 = contour_position.find(pos => pos.idx === l2.line[1]);
+            let pt11 = contourPositions.find(pos => pos.idx === l1.line[0]);
+            let pt12 = contourPositions.find(pos => pos.idx === l1.line[1]);
+            return lines.filter((l2, idx) => {
+              let pt21 = contourPositions.find(pos => pos.idx === l2.line[0]);
+              let pt22 = contourPositions.find(pos => pos.idx === l2.line[1]);
               return (idx!==i && /** not itself */
                       !l1.line.some(r=> l2.line.includes(r)) &&
-                      ((pt11.x-pt21.x)**2+(pt11.y-pt21.y)**2)**0.5 > 200 && /** contours not too close */
-                      ((pt11.x-pt22.x)**2+(pt11.y-pt22.y)**2)**0.5 > 200 && /** contours not too close */
-                      ((pt12.x-pt21.x)**2+(pt12.y-pt21.y)**2)**0.5 > 200 && /** contours not too close */
-                      ((pt12.x-pt22.x)**2+(pt12.y-pt22.y)**2)**0.5 > 200 && /** contours not too close */
+                      ((pt11.x-pt21.x)**2+(pt11.y-pt21.y)**2)**0.5 > 141 && /** contours not too close */
+                      ((pt11.x-pt22.x)**2+(pt11.y-pt22.y)**2)**0.5 > 141 && /** contours not too close */
+                      ((pt12.x-pt21.x)**2+(pt12.y-pt21.y)**2)**0.5 > 141 && /** contours not too close */
+                      ((pt12.x-pt22.x)**2+(pt12.y-pt22.y)**2)**0.5 > 141 && /** contours not too close */
                       Math.abs(l2.a-l1.a) < 5 && /** about the same angle */
                       Math.abs(l2.d-l1.d) < 10)});/** about the same length */
-            if(parallelLines.length>0){
-              console.log("l1 : ", l1.line);
-              console.log("parallelLines : ", parallelLines.map(l2 => l2.line));
-            }
-            return parallelLines;
           });
-          console.log(lines.map(l => l.line));
 
-          /** drawContours, remove in production */
-          new Set(lines.flatMap(l => l.line)).forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(0,255,0), 1, this.cv.LINE_8, hierarchy, 100));
           /** TODO : draw lines ONLY IF the parallel lines finding has poor result*/
           new Set(lines.map(l => l.line)).forEach(l => {
-            let pt1 = contour_position.find(pos => pos.idx === l[0]);
-            let pt2 = contour_position.find(pos => pos.idx === l[1]);
+            let pt1 = contourPositions.find(pos => pos.idx === l[0]);
+            let pt2 = contourPositions.find(pos => pos.idx === l[1]);
             this.cv.line(dst2,
                 new this.cv.Point(pt1.x, pt1.y),
                 new this.cv.Point(pt2.x, pt2.y),
                 [0, 0, 255, 255], 1)
           });
 
-          if (lines.length >= 4){
+          let squareContours = [];
+          for(let l1 of lines) {
             /** is perpendicular condition : diagonal about 90 angle (tolerance = 5) */
-            if(lines.some(l2 => lines[0].line.some(r=> l2.line.includes(r)) && Math.abs(90-Math.abs(lines[0].a-l2.a)) < 5)){
-              /** filter only the 4 corners */
-              contour_position = contour_position.filter(pos => Array.from(new Set(lines.flatMap(l => l.line))).includes(pos.idx));
-              console.log(contour_position);
-              const cropping_margin = 60;
-              let posX = contour_position.map(pos => pos.x).sort();
-              let posY = contour_position.map(pos => pos.y).sort();
-              let rotateRadian = -lines.map(l => l.a * Math.PI / 180).sort()[0];
-              let cropLength = parseInt(lines.map(l => l.d).sort().pop()+cropping_margin);
-              let min_x = posX[0] - cropping_margin;
-              let max_x = posX.pop() + cropping_margin;
-              let min_y = posY[0] - cropping_margin;
-              let max_y = posY.pop() + cropping_margin;
-
-              /** crop the code out from the whole image */
-              let croppedImg = this.canvas.getContext('2d').getImageData(min_x, min_y, max_x-min_x, max_y-min_y);
-              let croppedCanvas = document.createElement('canvas');
-              croppedCanvas.width = 400;
-              croppedCanvas.height = 400;
-              croppedCanvas.getContext('2d').putImageData(croppedImg, 0, 0);
-              if(rotateRadian > 15 * Math.PI / 180){
-                croppedCanvas.getContext('2d').rotate(rotateRadian);
-                croppedCanvas.getContext('2d').translate(0,min_y-posY[1]+cropping_margin);
-                croppedCanvas.getContext('2d').scale(320/cropLength, 320/cropLength);
-              }
-              this.$refs.img2.getContext('2d').drawImage(croppedCanvas, parseInt(cropping_margin/2), parseInt(cropping_margin/2), 320, 320,0,0, 320, 320);
-              croppedImg = croppedCanvas.getContext('2d').getImageData(parseInt(cropping_margin/2), parseInt(cropping_margin/2), 320, 320);
-              this.$refs.img3.getContext("2d").putImageData(croppedImg, 0, 0);
-
-
-              /** use canvas 2 for showing crop & rotate process */
-              // let ctx = this.$refs.img2.getContext("2d");
-              // ctx.putImageData(croppedImg, 0, 0);
-              // /** TASK : Crop the image then rotate the image then crop it again */
-              // ctx.rotate(rotateRadian);
-              // ctx.translate(0,min_y-posY[1]+cropping_margin);
-              // ctx.scale(320/cropLength, 320/cropLength);
-              // ctx.drawImage(this.$refs.img2, 0,0);
-              // croppedImg = ctx.getImageData(parseInt(cropping_margin/2), parseInt(cropping_margin/2), 320, 320);
-              // this.$refs.img3.getContext("2d").putImageData(croppedImg, 0, 0);
-              this.remoteDecode('original');
-            } else {
-              console.log('not perpendicular');
+            let p = lines.filter(l2 => l1.line.some(r => l2.line.includes(r)) &&
+                Math.abs(90 - Math.abs(l1.a - l2.a)) < 5 &&
+                Math.abs(l1.d - l2.d) < 10);
+            if (p.length===2) {
+              squareContours.push(...p.flatMap(v => v.line));
+              break;
             }
+          }
+          /** drawContours, remove in production */
+          squareContours.forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(0,255,0), 1, this.cv.LINE_8, hierarchy, 100));
+          if(squareContours.length === 4){
+            /** filter only the 4 corners */
+            contourPositions = contourPositions.filter(pos => squareContours.includes(pos.idx));
+            let posX = contourPositions.map(pos => pos.x).sort((a, b) => a - b);
+            let posY = contourPositions.map(pos => pos.y).sort((a, b) => a - b);
+            let rotateRadian = -Math.min(...lines.map(l => l.a * Math.PI / 180));
+            let minX =Math.min(...posX) - cropMargin;
+            let minY =Math.min(...posY) - cropMargin;
+            let cropLength = Math.max(Math.max(...posX)-minX, Math.max(...posY)-minY) + cropMargin;
+
+            let ctx2 = this.$refs.img2.getContext("2d");
+            let ctx3 = this.$refs.img3.getContext("2d");
+            ctx2.drawImage(this.canvas,sxSpace+minX,sySpace+minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize);
+
+            ctx3.drawImage(this.canvas, sxSpace+minX,sySpace+minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize);
+            if(rotateRadian > 15 * Math.PI / 180){
+              ctx3.rotate(rotateRadian);
+              ctx3.translate(0,minY-posY[1]+cropMargin);
+            }
+
+            ctx3.drawImage(this.$refs.img3, 0, 0, this.imageSize, this.imageSize,0,0, this.imageSize+cropMargin/2, this.imageSize+cropMargin/2);
+
+            /** use canvas 2 for showing crop & rotate process */
+            // let ctx = this.$refs.img2.getContext("2d");
+            // ctx.putImageData(croppedImg, 0, 0);
+            // /** TASK : Crop the image then rotate the image then crop it again */
+            // ctx.rotate(rotateRadian);
+            // ctx.translate(0,min_y-posY[1]+cropping_margin);
+            // ctx.scale(320/cropLength, 320/cropLength);
+            // ctx.drawImage(this.$refs.img2, 0,0);
+            // croppedImg = ctx.getImageData(parseInt(cropping_margin/2), parseInt(cropping_margin/2), 320, 320);
+            // this.$refs.img3.getContext("2d").putImageData(croppedImg, 0, 0);
+            this.remoteDecode('original');
           } else {
-            console.log('code not found by contour method, upload center part to server');
+            console.log('square not found by contour method, upload center part to server');
           }
 
           console.log("Time taken - ", (new Date().getTime()-start));
@@ -558,7 +563,7 @@ export default {
           this.$refs.img1.getContext("2d").font = "14px Arial";
           this.$refs.img1.getContext("2d").fillStyle = "white";
           this.$refs.img1.getContext("2d").textAlign = "center";
-          contour_position.forEach(pos => this.$refs.img1.getContext("2d").fillText(pos.idx, pos.x, pos.y-4));
+          contourPositions.forEach(pos => this.$refs.img1.getContext("2d").fillText(pos.idx, pos.x, pos.y-4));
 
           const wh = 2*this.cornerSize;
           let tlCornerData = this.$refs.img.getContext('2d').getImageData(0, 0, wh, wh);       //Makes sure browser can handle the image
