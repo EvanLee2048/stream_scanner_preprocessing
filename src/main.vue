@@ -157,7 +157,7 @@ export default {
     }
   },
   methods: {
-    rectangleDetector(image, pos){  //Determine if image is relevant
+    cornerDetect(image, pos){  //Determine if image is relevant
       let w = image.width;                            
       let h = image.height;
       let surface= new Array(w+h-1).fill(0);    //What is the surface variable representing ?     --->  45 degree line
@@ -580,10 +580,10 @@ export default {
           let trCornerData = this.$refs.img.getContext('2d').getImageData(this.$refs.img.width-wh, 0, wh, wh);
           let blCornerData = this.$refs.img.getContext('2d').getImageData(0, this.$refs.img.height-wh, wh, wh);
           let brCornerData = this.$refs.img.getContext('2d').getImageData(this.$refs.img.width-wh, this.$refs.img.height-wh, wh, wh);
-          this.tl_cursor = this.rectangleDetector(tlCornerData, 'tl');
-          this.tr_cursor = this.rectangleDetector(trCornerData, 'tr');
-          this.bl_cursor = this.rectangleDetector(blCornerData, 'bl');
-          this.br_cursor = this.rectangleDetector(brCornerData, 'br');
+          this.tl_cursor = this.cornerDetect(tlCornerData, 'tl');
+          this.tr_cursor = this.cornerDetect(trCornerData, 'tr');
+          this.bl_cursor = this.cornerDetect(blCornerData, 'bl');
+          this.br_cursor = this.cornerDetect(brCornerData, 'br');
           this.drawCursor(tlCornerData, this.tl_cursor, 'tl');
           this.drawCursor(trCornerData, this.tr_cursor, 'tr');
           this.drawCursor(blCornerData, this.bl_cursor, 'bl');
