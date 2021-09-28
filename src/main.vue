@@ -62,22 +62,23 @@
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490099.jpg"/> -->           <!--       Output : Unsatisfactory - Cropping Issue -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490100.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490101.jpg"/> -->           <!-- Output : No contour - Interesting case ***-->
-         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490102.jpg"/> -->           <!-- Output : No contour - Interesting case ***-->
+         <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490102.jpg"/>           <!-- Output : No contour - Interesting case ***-->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490103.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490104.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490105.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490106.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
-         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490107.jpg"/> -->           <!--       Output : Unsatisfactory - Cropping Issue -->
+         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490107.jpg"/> -->           <!--       Output : Unsatisfactory - Poor in founding contour -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490108.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
-         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492375.jpg"/> -->           <!--       Output : Unsatisfactory - Interesting Case ***-->
+         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490108.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
+         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492375.jpg"/> -->           <!--       Output : Satisfactory ***-->
 
-         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492376.jpg"/> -->           <!--       Output : Unsatisfactory - Issue with detecting important contours, image quality good ***-->
+         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492376.jpg"/> -->          <!--       Output : Satisfactory ***-->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492377.jpg"/> -->           <!--       Output : Satisfactory -->
-         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492378.jpg"/> -->           <!--       Output : Unsatisfactory - Cropping Issue -->
+         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492378.jpg"/> -->            <!--       Output : Satisfactory -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492379.jpg"/> -->           <!--       Output : Satisfactory-->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492380.jpg"/> -->           <!-- Output : No contour - Poor Image Quality-->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492381.jpg"/>-->            <!-- Output : No contour - Poor Image Quality-->
-         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492382.jpg"/> -->           <!--       Output : Unsatisfactory - Irrelevant line parallel with the main (square) line ***-->
+         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492382.jpg"/>-->            <!--       Output : Satisfactory -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492383.jpg"/> -->           <!-- Output : No contour - Poor Image Quality-->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492384.jpg"/> -->           <!-- Output : No contour - Poor Image Quality-->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492385.jpg"/> -->           <!--       Output : Satisfactory-->
@@ -92,7 +93,7 @@
           <p class="text-center text-h4 my-2">Processed Image</p>
           <canvas ref="img" width="1110" height="1110"></canvas>    <!-- Shows the output image, canvas -->
           <canvas ref="img1" width="1110" height="1110"></canvas>    <!-- Shows the output image, canvas -->
-          <canvas ref="img2" width="480" height="480"></canvas>    <!-- Shows the output image, canvas -->
+          <canvas ref="img2" width="320" height="320"></canvas>    <!-- Shows the output image, canvas -->
           <canvas ref="img3" width="320" height="320"></canvas>    <!-- Shows the output image, canvas -->
         </v-col>
       </v-row>
@@ -371,17 +372,17 @@ export default {
       }
       if(this.cv){
         if(!this.computing){
-          const spaceSize = 480; /** cropped space size */
+          const canvasCvSize = 480; /** cropped space size */
           const minLineLength = 150;
           const maxLineLength = 400;
           const cropMargin = 30;
 
           let canvasCv = document.createElement('canvas');
           let canvasCvCtx = canvasCv.getContext('2d');
-          canvasCv.width = spaceSize;
-          canvasCv.height = spaceSize;
-          const sxSpace = 100;
-          const sySpace = 160;
+          canvasCv.width = canvasCvSize;
+          canvasCv.height = canvasCvSize;
+          const sxSpace = 200;
+          const sySpace = 120;
           canvasCvCtx.drawImage(this.canvas,sxSpace,sySpace,canvasCv.width,canvasCv.height,0,0,canvasCv.width,canvasCv.height);
 
           let start = new Date().getTime();
@@ -417,7 +418,7 @@ export default {
           // this.remoteDecode('equalizeHist');
 
           //BINARY INVERSION
-          this.cv.threshold(mat, mat, 100, 255, this.cv.THRESH_BINARY);
+          this.cv.threshold(mat, mat, 127, 255, this.cv.THRESH_BINARY);
           let M = this.cv.Mat.ones(7, 7, this.cv.CV_8U);
           this.cv.morphologyEx(mat, mat, this.cv.MORPH_OPEN, M);
 
@@ -481,7 +482,7 @@ export default {
             }
           }
           /** filter only parallel lines */
-          lines = lines.flatMap((l1, i) => {
+          lines = Array.from(new Set(lines.flatMap((l1, i) => {
             let pt11 = contourPositions.find(pos => pos.idx === l1.line[0]);
             let pt12 = contourPositions.find(pos => pos.idx === l1.line[1]);
             return lines.filter((l2, idx) => {
@@ -489,16 +490,18 @@ export default {
               let pt22 = contourPositions.find(pos => pos.idx === l2.line[1]);
               return (idx!==i && /** not itself */
                       !l1.line.some(r=> l2.line.includes(r)) &&
-                      ((pt11.x-pt21.x)**2+(pt11.y-pt21.y)**2)**0.5 > 141 && /** contours not too close */
-                      ((pt11.x-pt22.x)**2+(pt11.y-pt22.y)**2)**0.5 > 141 && /** contours not too close */
-                      ((pt12.x-pt21.x)**2+(pt12.y-pt21.y)**2)**0.5 > 141 && /** contours not too close */
-                      ((pt12.x-pt22.x)**2+(pt12.y-pt22.y)**2)**0.5 > 141 && /** contours not too close */
-                      Math.abs(l2.a-l1.a) < 5 && /** about the same angle */
+                      ((pt11.x-pt21.x)**2+(pt11.y-pt21.y)**2)**0.5 > minLineLength && /** contours not too close */
+                      ((pt11.x-pt22.x)**2+(pt11.y-pt22.y)**2)**0.5 > minLineLength && /** contours not too close */
+                      ((pt12.x-pt21.x)**2+(pt12.y-pt21.y)**2)**0.5 > minLineLength && /** contours not too close */
+                      ((pt12.x-pt22.x)**2+(pt12.y-pt22.y)**2)**0.5 > minLineLength && /** contours not too close */
+                      (Math.abs(l2.a-l1.a) < 5 || Math.abs(180-Math.abs(l2.a-l1.a)) < 5) && /** about the same angle */
                       Math.abs(l2.d-l1.d) < 10)});/** about the same length */
-          });
+          })));
+          console.log(lines.filter(l1 => l1.line.includes(71) && l1.line.includes(40)));
+          console.log(lines.filter(l1 => l1.line.includes(72) && l1.line.includes(39)));
 
-          /** TODO : draw lines ONLY IF the parallel lines finding has poor result*/
-          new Set(lines.map(l => l.line)).forEach(l => {
+          /** draw lines */
+          lines.map(l => l.line).forEach(l => {
             let pt1 = contourPositions.find(pos => pos.idx === l[0]);
             let pt2 = contourPositions.find(pos => pos.idx === l[1]);
             this.cv.line(dst2,
@@ -510,9 +513,10 @@ export default {
           let squareContours = [];
           for(let l1 of lines) {
             /** is perpendicular condition : diagonal about 90 angle (tolerance = 5) */
-            let p = lines.filter(l2 => l1.line.some(r => l2.line.includes(r)) &&
-                Math.abs(90 - Math.abs(l1.a - l2.a)) < 5 &&
-                Math.abs(l1.d - l2.d) < 10);
+            let p = Array.from(new Set(lines.filter(l2 => l1.line.some(r => l2.line.includes(r)) &&
+                (Math.abs(90 - Math.abs(l1.a - l2.a)) || Math.abs(270 - Math.abs(l1.a - l2.a)) < 5) < 5 &&
+                Math.abs(l1.d - l2.d) < 10)));
+
             if (p.length===2) {
               squareContours.push(...p.flatMap(v => v.line));
               break;
@@ -522,10 +526,12 @@ export default {
           squareContours.forEach(k => this.cv.drawContours(dst2, contours, k, new this.cv.Scalar(0,255,0), 1, this.cv.LINE_8, hierarchy, 100));
           if(squareContours.length === 4){
             /** filter only the 4 corners */
-            contourPositions = contourPositions.filter(pos => squareContours.includes(pos.idx));
-            let posX = contourPositions.map(pos => pos.x).sort((a, b) => a - b);
-            let posY = contourPositions.map(pos => pos.y).sort((a, b) => a - b);
-            let rotateRadian = -Math.min(...lines.map(l => l.a * Math.PI / 180));
+            let squareContourPositions = contourPositions.filter(pos => squareContours.includes(pos.idx));
+            let posX = squareContourPositions.map(pos => pos.x).sort((a, b) => a - b);
+            let posY = squareContourPositions.map(pos => pos.y).sort((a, b) => a - b);
+            let rotateRadian = -lines.filter(l => l.line.every(c => squareContours.includes(c)))
+                                     .map(l => l.a * Math.PI / 180)
+                                     .sort((a, b) => Math.abs(a) - Math.abs(b))[0];
             let minX =Math.min(...posX) - cropMargin;
             let minY =Math.min(...posY) - cropMargin;
             let cropLength = Math.max(Math.max(...posX)-minX, Math.max(...posY)-minY) + cropMargin;
@@ -535,23 +541,25 @@ export default {
             ctx2.drawImage(this.canvas,sxSpace+minX,sySpace+minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize);
 
             ctx3.drawImage(this.canvas, sxSpace+minX,sySpace+minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize);
-            if(rotateRadian > 15 * Math.PI / 180){
-              ctx3.rotate(rotateRadian);
-              ctx3.translate(0,minY-posY[1]+cropMargin);
+            // if(Math.abs(rotateRadian) > 15 * Math.PI / 180){
+            //   ctx3.rotate(rotateRadian);
+            //   ctx3.translate(0,minY-posY[1]+cropMargin);
+            //   ctx3.scale(1/Math.cos(Math.abs(rotateRadian)), 1/Math.cos(Math.abs(rotateRadian)));
+            //   ctx3.drawImage(this.$refs.img3, 0, 0, this.imageSize, this.imageSize,
+            //       0,-cropMargin, this.imageSize+cropMargin*2, this.imageSize+cropMargin*2);
+            // }
+            if(Math.abs(rotateRadian) > 45 * Math.PI / 180){
+              rotateRadian-= 90 * Math.PI / 180;
             }
-
-            ctx3.drawImage(this.$refs.img3, 0, 0, this.imageSize, this.imageSize,0,0, this.imageSize+cropMargin/2, this.imageSize+cropMargin/2);
-
-            /** use canvas 2 for showing crop & rotate process */
-            // let ctx = this.$refs.img2.getContext("2d");
-            // ctx.putImageData(croppedImg, 0, 0);
-            // /** TASK : Crop the image then rotate the image then crop it again */
-            // ctx.rotate(rotateRadian);
-            // ctx.translate(0,min_y-posY[1]+cropping_margin);
-            // ctx.scale(320/cropLength, 320/cropLength);
-            // ctx.drawImage(this.$refs.img2, 0,0);
-            // croppedImg = ctx.getImageData(parseInt(cropping_margin/2), parseInt(cropping_margin/2), 320, 320);
-            // this.$refs.img3.getContext("2d").putImageData(croppedImg, 0, 0);
+            if(Math.abs(rotateRadian) > 15 * Math.PI / 180){
+              ctx3.rotate(rotateRadian);
+                ctx3.translate(0,minY-posY[1]+cropMargin);
+                // ctx3.scale(1/Math.cos(Math.abs(rotateRadian)), 1/Math.cos(Math.abs(rotateRadian)));
+                ctx3.drawImage(this.$refs.img3, 0, 0, this.imageSize, this.imageSize,
+                    0,-cropMargin,
+                    this.imageSize/Math.cos(Math.abs(rotateRadian))+cropMargin*2,
+                    this.imageSize/Math.cos(Math.abs(rotateRadian))+cropMargin*2);
+            }
             this.remoteDecode('original');
           } else {
             console.log('square not found by contour method, upload center part to server');
