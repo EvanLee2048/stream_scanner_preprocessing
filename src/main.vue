@@ -62,7 +62,7 @@
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490099.jpg"/> -->           <!--       Output : Unsatisfactory - Cropping Issue -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490100.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490101.jpg"/> -->           <!-- Output : No contour - Interesting case ***-->
-         <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490102.jpg"/>           <!-- Output : No contour - Interesting case ***-->
+          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490102.jpg"/> -->          <!-- Output : No contour - Interesting case ***-->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490103.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490104.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490105.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
@@ -72,7 +72,7 @@
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490108.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492375.jpg"/> -->           <!--       Output : Satisfactory ***-->
 
-         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492376.jpg"/> -->          <!--       Output : Satisfactory ***-->
+         <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492376.jpg"/>          <!--       Output : Satisfactory ***-->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492377.jpg"/> -->           <!--       Output : Satisfactory -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492378.jpg"/> -->            <!--       Output : Satisfactory -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492379.jpg"/> -->           <!--       Output : Satisfactory-->
@@ -497,8 +497,6 @@ export default {
                       (Math.abs(l2.a-l1.a) < 5 || Math.abs(180-Math.abs(l2.a-l1.a)) < 5) && /** about the same angle */
                       Math.abs(l2.d-l1.d) < 10)});/** about the same length */
           })));
-          console.log(lines.filter(l1 => l1.line.includes(71) && l1.line.includes(40)));
-          console.log(lines.filter(l1 => l1.line.includes(72) && l1.line.includes(39)));
 
           /** draw lines */
           lines.map(l => l.line).forEach(l => {
@@ -514,9 +512,8 @@ export default {
           for(let l1 of lines) {
             /** is perpendicular condition : diagonal about 90 angle (tolerance = 5) */
             let p = Array.from(new Set(lines.filter(l2 => l1.line.some(r => l2.line.includes(r)) &&
-                (Math.abs(90 - Math.abs(l1.a - l2.a)) || Math.abs(270 - Math.abs(l1.a - l2.a)) < 5) < 5 &&
+                (Math.abs(90 - Math.abs(l1.a - l2.a)) < 5 || Math.abs(270 - Math.abs(l1.a - l2.a)) < 5) &&
                 Math.abs(l1.d - l2.d) < 10)));
-
             if (p.length===2) {
               squareContours.push(...p.flatMap(v => v.line));
               break;
