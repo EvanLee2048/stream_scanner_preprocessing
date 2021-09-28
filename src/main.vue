@@ -419,7 +419,7 @@ export default {
 
           //BINARY INVERSION
 
-          this.cv.adaptiveThreshold(mat, mat, 255, this.cv.ADAPTIVE_THRESH_GAUSSIAN_C, this.cv.THRESH_BINARY, 479, 2);
+          this.cv.adaptiveThreshold(mat, mat, 255, this.cv.ADAPTIVE_THRESH_MEAN_C, this.cv.THRESH_BINARY, canvasCvSize/2-1, 0);
           // this.cv.threshold(mat, mat, 127, 255, this.cv.THRESH_BINARY);
           let M = this.cv.Mat.ones(7, 7, this.cv.CV_8U);
           this.cv.morphologyEx(mat, mat, this.cv.MORPH_OPEN, M);
