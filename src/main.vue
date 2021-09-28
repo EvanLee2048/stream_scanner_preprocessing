@@ -62,7 +62,7 @@
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490099.jpg"/> -->           <!--       Output : Unsatisfactory - Cropping Issue -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490100.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490101.jpg"/> -->           <!-- Output : No contour - Interesting case ***-->
-          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490102.jpg"/> -->          <!-- Output : No contour - Interesting case ***-->
+          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490102.jpg"/>           <!-- Output : No contour - Interesting case ***-->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490103.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490104.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490105.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
@@ -72,7 +72,7 @@
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490108.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492375.jpg"/> -->           <!--       Output : Satisfactory ***-->
 
-         <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492376.jpg"/>          <!--       Output : Satisfactory ***-->
+         <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492376.jpg"/> -->         <!--       Output : Satisfactory ***-->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492377.jpg"/> -->           <!--       Output : Satisfactory -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492378.jpg"/> -->            <!--       Output : Satisfactory -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492379.jpg"/> -->           <!--       Output : Satisfactory-->
@@ -381,7 +381,7 @@ export default {
           let canvasCvCtx = canvasCv.getContext('2d');
           canvasCv.width = canvasCvSize;
           canvasCv.height = canvasCvSize;
-          const sxSpace = 200;
+          const sxSpace = 120;
           const sySpace = 120;
           canvasCvCtx.drawImage(this.canvas,sxSpace,sySpace,canvasCv.width,canvasCv.height,0,0,canvasCv.width,canvasCv.height);
 
@@ -418,7 +418,9 @@ export default {
           // this.remoteDecode('equalizeHist');
 
           //BINARY INVERSION
-          this.cv.threshold(mat, mat, 127, 255, this.cv.THRESH_BINARY);
+
+          this.cv.adaptiveThreshold(mat, mat, 255, this.cv.ADAPTIVE_THRESH_GAUSSIAN_C, this.cv.THRESH_BINARY, 479, 2);
+          // this.cv.threshold(mat, mat, 127, 255, this.cv.THRESH_BINARY);
           let M = this.cv.Mat.ones(7, 7, this.cv.CV_8U);
           this.cv.morphologyEx(mat, mat, this.cv.MORPH_OPEN, M);
 
@@ -545,8 +547,10 @@ export default {
             //   ctx3.drawImage(this.$refs.img3, 0, 0, this.imageSize, this.imageSize,
             //       0,-cropMargin, this.imageSize+cropMargin*2, this.imageSize+cropMargin*2);
             // }
-            if(Math.abs(rotateRadian) > 45 * Math.PI / 180){
-              rotateRadian-= 90 * Math.PI / 180;
+            if(rotateRadian > 45 * Math.PI / 180){
+              rotateRadian -= 90 * Math.PI / 180;
+            } else if(rotateRadian < -45 * Math.PI / 180){
+              rotateRadian += 90 * Math.PI / 180;
             }
             if(Math.abs(rotateRadian) > 15 * Math.PI / 180){
               ctx3.rotate(rotateRadian);
