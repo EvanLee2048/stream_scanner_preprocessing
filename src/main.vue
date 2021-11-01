@@ -577,30 +577,21 @@ export default {
             }
 
             //New Code
-
-
-            let proxyDistance = (lines[0].d + lines[1].d +lines[2].d + lines[3].d)/4
-            let proxysWidth = 1.282*proxyDistance;
-            let proxysHeight = 1.282*proxyDistance;
             let translate_x = canvasCvSize/2;   //Making rotation about the center
             let translate_y = canvasCvSize/2;
 
             console.log(translate_x, translate_y);
-
 
             ctx4.translate(translate_x, translate_y);
             ctx4.rotate(rotateRadian);
             ctx4.translate(-translate_x, -translate_y);
 
             console.log(squareContourPositions);
-            console.log("Proxy Width/Height", proxysWidth, proxysHeight, "Rotate Angle - ", rotateRadian*180/Math.PI);
 
-            // ctx4.translate(100,100);
-            ctx4.drawImage(this.$refs.img4, 0, 0, 720, 720, 0,0, 720,720);
-            ctx5.drawImage(this.$refs.img4, 0, 0, 720, 720, 0,0, 720,720);
+            ctx4.drawImage(this.$refs.img4, 0, 0, canvasCvSize, canvasCvSize, 0,0, canvasCvSize, canvasCvSize);
+            ctx5.drawImage(this.$refs.img4, 0, 0, canvasCvSize, canvasCvSize, 0,0, canvasCvSize, canvasCvSize);
 
-
-            this.opencvComputeNext();
+            // this.opencvComputeNext();
 
             if(Math.abs(rotateRadian) > 0.2 * Math.PI / 180){
               /** TODO : crop the image in correct position */
