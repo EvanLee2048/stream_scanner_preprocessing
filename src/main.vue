@@ -105,8 +105,10 @@
 
          <p class="text-center text-h4 my-2">img4</p>
           <canvas ref="img4" width="480" height="480"></canvas>    <!-- Binary Inversed version of img4_1 -->
+          <p class="text-center text-h4 my-2">img5</p>
           <canvas ref="img5" width="1110" height="1110"></canvas>    <!-- img -->
-          <canvas ref="img6" width="1110" height="1110"></canvas>    <!-- img1 -->
+          <p class="text-center text-h4 my-2">img6</p>
+          <canvas ref="img6" width="320" height="320"></canvas>    <!-- img1 -->
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -393,9 +395,7 @@ export default {
           let canvasCvCtx = canvasCv.getContext('2d');         //Canvas 0 ---> B&W
           canvasCv.width = canvasCvSize;
           canvasCv.height = canvasCvSize;
-          const sxSpace = 0;
-          const sySpace = 0;
-          canvasCvCtx.drawImage(this.canvas,sxSpace,sySpace,canvasCv.width,canvasCv.height,0,0,canvasCv.width,canvasCv.height);
+          canvasCvCtx.drawImage(this.canvas,0,0,canvasCv.width,canvasCv.height,0,0,canvasCv.width,canvasCv.height);
 
           let start = new Date().getTime();
           this.computing = true;
@@ -562,9 +562,9 @@ export default {
 
             let ctx5 = this.$refs.img4_1.getContext("2d");
 
-            ctx2.drawImage(this.canvas, sxSpace+minX,sySpace+ minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize);
+            ctx2.drawImage(this.canvas, minX,minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize);
 
-            ctx3.drawImage(this.canvas, sxSpace+minX, sySpace+minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize); //this.imageSize = 320
+            ctx3.drawImage(this.canvas, minX, minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize); //this.imageSize = 320
 
             ctx4.drawImage(this.canvas, 0, 0, canvasCvSize, canvasCvSize,  0, 0, canvasCvSize, canvasCvSize);
 
@@ -600,7 +600,7 @@ export default {
             ctx5.drawImage(this.$refs.img4, 0, 0, 720, 720, 0,0, 720,720);
 
 
-            this.opencvComputeNext()
+            this.opencvComputeNext();
 
             if(Math.abs(rotateRadian) > 0.2 * Math.PI / 180){
               /** TODO : crop the image in correct position */
@@ -674,10 +674,8 @@ export default {
           let canvasCvCtx = canvasCv.getContext('2d');         //Canvas 0 ---> B&W
           canvasCv.width = canvasCvSize;
           canvasCv.height = canvasCvSize;
-          const sxSpace = 100;
-          const sySpace = 150;
 
-          canvasCvCtx.drawImage(this.$refs.img4,sxSpace,sySpace,canvasCv.width,canvasCv.height,0,0,canvasCv.width,canvasCv.height);
+          canvasCvCtx.drawImage(this.$refs.img4,0,0,canvasCv.width,canvasCv.height,0,0,canvasCv.width,canvasCv.height);
 
           let mat = this.cv.imread(canvasCv);    // load source image into cv
           let dst = new this.cv.Mat();           // Creating a new copy of the cv.
@@ -791,11 +789,9 @@ export default {
             let minY =Math.min(...posY) - cropMargin;
             let cropLength = Math.max(Math.max(...posX)-minX, Math.max(...posY)-minY) + cropMargin;
 
-            let ctx2 = this.$refs.img6.getContext("2d");
-            // let ctx3 = this.$refs.img8.getContext("2d");
+            let ctx6 = this.$refs.img6.getContext("2d");
 
-
-            ctx2.drawImage(this.$refs.img4_1, sxSpace+minX,sySpace+ minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize);
+            ctx6.drawImage(this.$refs.img4_1, minX,minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize);
 
             this.cv.imshow(this.$refs.img5, dst2);  // Onto Canvas of img5 put dst2 --> openCV next
           }
