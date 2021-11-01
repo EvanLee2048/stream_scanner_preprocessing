@@ -62,11 +62,7 @@
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490099.jpg"/> -->           <!--       Output : Unsatisfactory - Cropping Issue -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490100.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490101.jpg"/> -->           <!-- Output : No contour - Interesting case ***-->
-<<<<<<< HEAD
-          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490102.jpg"/>           Output : No contour - Interesting case *** -->
-=======
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490102.jpg"/> -->           <!-- Output : No contour - Interesting case ***-->
->>>>>>> 0fe9b29a3b32969ae4ca13e4429d75339f565223
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490103.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490104.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632490105.jpg"/> -->           <!-- Output : No contour - Poor Image Quality -->
@@ -89,55 +85,28 @@
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492387.jpg"/> -->           <!--       Output : Satisfactory-->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492388.jpg"/> -->           <!--       Output : Satisfactory-->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492389.jpg"/> -->           <!--       Output : Unsatisfactory - Cropping Issue -->
-<<<<<<< HEAD
-<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492390.jpg"/>-->            <!-- Output : No contour - Poor Image Quality-->
-<!--          <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492391.jpg"/>-->            <!-- Output : No contour - Poor Image Quality-->
-       
-       
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/1.jpg"/> -->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/2.jpg"/> -->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/3.jpg"/> -->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/4.jpg"/> -->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/5.jpg"/> -->
-       <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/6.jpg"/>
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/7.jpg"/> -->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/8.jpg"/> -->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/9.jpg"/> -->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/10.jpg"/>-->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/11.jpg"/>-->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/12.jpg"/> -->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/13.jpg"/> -->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/14.jpg"/> -->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/15.jpg"/> -->
-       
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/16.png"/>   -->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/17.png"/> -->
-       <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/19.png"/> -->
-<!--  -->
-=======
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492390.jpg"/> -->            <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492391.jpg"/>-->             <!-- Output : No contour - Poor Image Quality-->
           <img ref="input_img" alt="full image" style="width: 320px; height: 320px;" @load="init" src="@/full_screen_images/1632715023.jpg"/>
 <!--          <img ref="input_img" alt="full image" style="width: 320px; height: 320px;" @load="init" src="@/full_screen_images/1632715024.jpg"/>-->
->>>>>>> 0fe9b29a3b32969ae4ca13e4429d75339f565223
         </v-col>
         <v-col class="text-center">
           <p class="text-center text-h4 my-2">Processed Image</p>
           <canvas ref="img" width="480" height="480"></canvas>    <!-- Shows the output image, canvas -->
+          <p class="text-center text-h4 my-2">img1</p>
           <canvas ref="img1" width="480" height="480"></canvas>    <!-- Shows the output image, canvas -->
+          <p class="text-center text-h4 my-2">img2</p>
           <canvas ref="img2" width="320" height="320"></canvas>    <!-- Shows the output image, canvas -->
+          <p class="text-center text-h4 my-2">img3</p>
           <canvas ref="img3" width="320" height="320"></canvas>    <!-- Shows the output image, canvas -->
-         
-          <canvas ref="img4_1" width="720" height="720"></canvas>    <!-- Rotation about center on the main image -->
-         
-         <p class="text-center text-h4 my-2">Processed Image Next</p>
 
-          <canvas ref="img4" width="720" height="720"></canvas>    <!-- Binary Inversed version of img4_1 -->     
+          <p class="text-center text-h4 my-2">img4_1</p>
+          <canvas ref="img4_1" width="480" height="480"></canvas>    <!-- Rotation about center on the main image -->
+
+         <p class="text-center text-h4 my-2">img4</p>
+          <canvas ref="img4" width="480" height="480"></canvas>    <!-- Binary Inversed version of img4_1 -->
           <canvas ref="img5" width="1110" height="1110"></canvas>    <!-- img -->
-          
           <canvas ref="img6" width="1110" height="1110"></canvas>    <!-- img1 -->
-
-          
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -415,7 +384,7 @@ export default {
       }
       if(this.cv){
         if(!this.computing){
-          const canvasCvSize = 360; /** cropped space size */
+          const canvasCvSize = 480; /** cropped space size */
           const minLineLength = 150;
           const maxLineLength = 400;
           const cropMargin = 30;
@@ -424,24 +393,14 @@ export default {
           let canvasCvCtx = canvasCv.getContext('2d');         //Canvas 0 ---> B&W
           canvasCv.width = canvasCvSize;
           canvasCv.height = canvasCvSize;
-<<<<<<< HEAD
-          const sxSpace = 50;
-          const sySpace = 50;
-          
-=======
           const sxSpace = 0;
           const sySpace = 0;
->>>>>>> 0fe9b29a3b32969ae4ca13e4429d75339f565223
           canvasCvCtx.drawImage(this.canvas,sxSpace,sySpace,canvasCv.width,canvasCv.height,0,0,canvasCv.width,canvasCv.height);
 
           let start = new Date().getTime();
           this.computing = true;
-<<<<<<< HEAD
-          let mat = this.cv.imread(canvasCv);    // load source image into cv
-=======
           let mat = this.cv.imread(canvasCv); // load source image into cv
           console.log("imread finish, Time taken - ", (new Date().getTime()-start));
->>>>>>> 0fe9b29a3b32969ae4ca13e4429d75339f565223
           let dst = new this.cv.Mat();           // Creating a new copy of the cv.
           this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);
           mat = dst;
@@ -481,7 +440,12 @@ export default {
           console.log("morphologyEx finish, Time taken - ", (new Date().getTime()-start));
 
           this.cv.imshow(this.$refs.img, mat);
-  
+          /**
+           * 02 September 2021
+           * https://docs.opencv.org/4.5.2/d5/daa/tutorial_js_contours_begin.html
+           * Contours can be explained simply as a curve joining all the continuous points (along the boundary), having same color or intensity.
+           * The contours are a useful tool for shape analysis and object detection and recognition.
+           * */
           let contours = new this.cv.MatVector();
           let hierarchy = new this.cv.Mat();
           this.cv.findContours(mat, contours, hierarchy, this.cv.RETR_CCOMP, this.cv.CHAIN_APPROX_SIMPLE);
@@ -490,7 +454,11 @@ export default {
           let contourPositions = [];
           let lines = [];
           for (let i = 0; i < contours.size(); ++i) {
- 
+            /**
+             * https://docs.opencv.org/4.5.2/da/dc1/tutorial_js_contour_properties.html
+             * Contours can be explained simply as a curve joining all the continuous points (along the boundary), having same color or intensity.
+             * The contours are a useful tool for shape analysis and object detection and recognition.
+             * */
             let contour = contours.get(i);
             let area = this.cv.contourArea(contour, false);
             if(area < 20 || area > 400) { continue; }
@@ -588,75 +556,34 @@ export default {
             let minY =Math.min(...posY) - cropMargin;
             let cropLength = Math.max(Math.max(...posX)-minX, Math.max(...posY)-minY) + cropMargin;
 
-<<<<<<< HEAD
             let ctx2 = this.$refs.img2.getContext("2d");    // Canvas 2 --> Base Image
-            // let ctx3 = this.$refs.img3.getContext("2d");    // Canvas 3 --> Rotated and top of base image 
+            let ctx3 = this.$refs.img3.getContext("2d");    // Canvas 3 --> Rotated and top of base image
             let ctx4 = this.$refs.img4.getContext("2d");
 
             let ctx5 = this.$refs.img4_1.getContext("2d");
-            
+
             ctx2.drawImage(this.canvas, sxSpace+minX,sySpace+ minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize);
 
-            // ctx3.drawImage(this.canvas, sxSpace+minX, sySpace+minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize); //this.imageSize = 320
+            ctx3.drawImage(this.canvas, sxSpace+minX, sySpace+minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize); //this.imageSize = 320
 
-            ctx4.drawImage(this.canvas, 0, 0, 720, 720,  0, 0, 720, 720);
+            ctx4.drawImage(this.canvas, 0, 0, canvasCvSize, canvasCvSize,  0, 0, canvasCvSize, canvasCvSize);
 
-            ctx5.drawImage(this.canvas, 0, 0, 720, 720,  0, 0, 720, 720);
-
-
-            // if(Math.abs(rotateRadian) > 15 * Math.PI / 180){
-            //   ctx3.rotate(rotateRadian);
-            //   ctx3.translate(0,minY-posY[1]+cropMargin);
-            //   ctx3.scale(1/Math.cos(Math.abs(rotateRadian)), 1/Math.cos(Math.abs(rotateRadian)));
-            //   ctx3.drawImage(this.$refs.img3, 0, 0, this.imageSize, this.imageSize,
-            //       0,-cropMargin, this.imageSize+cropMargin*2, this.imageSize+cropMargin*2);
-            // }
-=======
-            let ctx2 = this.$refs.img2.getContext("2d");
-            let ctx3 = this.$refs.img3.getContext("2d");
-
-            ctx2.drawImage(this.canvas,sxSpace+minX,sySpace+minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize);
-
-            /** flip image horizontally */
-            const flip = true;
-            if(!flip){
-              ctx2.translate(this.imageSize, 0);
-              ctx2.scale(-1, 1);
-              ctx2.drawImage(this.$refs.img2, 0, 0);
-              rotateRadian = -rotateRadian;
-            }
-            ctx3.drawImage(this.$refs.img2,0,0, this.imageSize, this.imageSize,  0, 0, this.imageSize, this.imageSize);
-
-            ctx3.font = '14px serif';
-            ctx3.fillStyle = "blue";
-            ctx3.fillText(Math.round(rotateRadian / Math.PI * 180), this.imageSize/2, this.imageSize/2);
->>>>>>> 0fe9b29a3b32969ae4ca13e4429d75339f565223
+            ctx5.drawImage(this.canvas, 0, 0, canvasCvSize, canvasCvSize,  0, 0, canvasCvSize, canvasCvSize);
 
             if(rotateRadian > 45 * Math.PI / 180){
               rotateRadian -= 90 * Math.PI / 180;
             } else if(rotateRadian < -45 * Math.PI / 180){
               rotateRadian += 90 * Math.PI / 180;
             }
-<<<<<<< HEAD
 
-            // if(Math.abs(rotateRadian) > 15 * Math.PI / 180){
-            //   ctx3.rotate(rotateRadian);
-            //     // ctx3.translate(0,minY-posY[1]+cropMargin);
-            //     // ctx3.scale(1/Math.cos(Math.abs(rotateRadian)), 1/Math.cos(Math.abs(rotateRadian)));
-            //     ctx3.drawImage(this.$refs.img3, 0, 0, this.imageSize, this.imageSize,
-            //         0,-cropMargin,
-            //         this.imageSize/Math.cos(Math.abs(rotateRadian))+cropMargin*2,
-            //         this.imageSize/Math.cos(Math.abs(rotateRadian))+cropMargin*2);
-            // }
+            //New Code
 
-              //New Code
-            
-            
+
             let proxyDistance = (lines[0].d + lines[1].d +lines[2].d + lines[3].d)/4
             let proxysWidth = 1.282*proxyDistance;
             let proxysHeight = 1.282*proxyDistance;
-            let translate_x = 360;   //Making rotation about the center
-            let translate_y = 360;
+            let translate_x = canvasCvSize/2;   //Making rotation about the center
+            let translate_y = canvasCvSize/2;
 
             console.log(translate_x, translate_y);
 
@@ -667,14 +594,14 @@ export default {
 
             console.log(squareContourPositions);
             console.log("Proxy Width/Height", proxysWidth, proxysHeight, "Rotate Angle - ", rotateRadian*180/Math.PI);
-            
+
             // ctx4.translate(100,100);
             ctx4.drawImage(this.$refs.img4, 0, 0, 720, 720, 0,0, 720,720);
             ctx5.drawImage(this.$refs.img4, 0, 0, 720, 720, 0,0, 720,720);
 
-            
+
             this.opencvComputeNext()
-=======
+
             if(Math.abs(rotateRadian) > 0.2 * Math.PI / 180){
               /** TODO : crop the image in correct position */
               if(rotateRadian > 0){
@@ -692,20 +619,13 @@ export default {
                   this.imageSize,
                   this.imageSize);
             }
->>>>>>> 0fe9b29a3b32969ae4ca13e4429d75339f565223
             this.remoteDecode('original');
-
           } else {
             console.log('square not found by contour method, upload center part to server');
           }
 
-<<<<<<< HEAD
-          console.log("Time taken - ", (new Date().getTime()-start));
-          this.cv.imshow(this.$refs.img1, dst2); 
-=======
           console.log("Find code finish, Time taken - ", (new Date().getTime()-start));
           this.cv.imshow(this.$refs.img1, dst2); //this.$refs.img ----> ref to "canvas" element named "img"
->>>>>>> 0fe9b29a3b32969ae4ca13e4429d75339f565223
 
           /** draw contour index on canvas javascript */
           this.$refs.img1.getContext("2d").font = "14px Arial";
@@ -743,8 +663,8 @@ export default {
       }
     },
 
-    opencvComputeNext(){    
-          
+    opencvComputeNext(){
+
           const canvasCvSize = 480; /** cropped space size */
           const minLineLength = 150;
           const maxLineLength = 400;
@@ -756,7 +676,7 @@ export default {
           canvasCv.height = canvasCvSize;
           const sxSpace = 100;
           const sySpace = 150;
-          
+
           canvasCvCtx.drawImage(this.$refs.img4,sxSpace,sySpace,canvasCv.width,canvasCv.height,0,0,canvasCv.width,canvasCv.height);
 
           let mat = this.cv.imread(canvasCv);    // load source image into cv
@@ -772,8 +692,8 @@ export default {
           this.cv.morphologyEx(mat, mat, this.cv.MORPH_OPEN, M);
 
           this.cv.imshow(this.$refs.img4, mat);  //Binary Inversion on the rotated image
-          
-          
+
+
           /**
            * 02 September 2021
            * https://docs.opencv.org/4.5.2/d5/daa/tutorial_js_contours_begin.html
@@ -871,12 +791,12 @@ export default {
             let minY =Math.min(...posY) - cropMargin;
             let cropLength = Math.max(Math.max(...posX)-minX, Math.max(...posY)-minY) + cropMargin;
 
-            let ctx2 = this.$refs.img6.getContext("2d");    
-            // let ctx3 = this.$refs.img8.getContext("2d");    
-                        
-            
+            let ctx2 = this.$refs.img6.getContext("2d");
+            // let ctx3 = this.$refs.img8.getContext("2d");
+
+
             ctx2.drawImage(this.$refs.img4_1, sxSpace+minX,sySpace+ minY, cropLength, cropLength,  0, 0, this.imageSize, this.imageSize);
-            
+
             this.cv.imshow(this.$refs.img5, dst2);  // Onto Canvas of img5 put dst2 --> openCV next
           }
             this.remoteDecode('original');
