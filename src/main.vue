@@ -149,6 +149,8 @@
 
 <script>
 import axios from "axios";
+import cv from '../services/cv'
+
 
 export default {
   name: "App",
@@ -810,6 +812,24 @@ export default {
           .catch(err => console.log(msg+' error : '+JSON.stringify(err)));
     },
     init(){
+      // // Worker code goes here
+      // this._status = {}
+      // this.worker = new Worker('/js/cv.worker.js') // load worker
+
+      // // Capture events and save [status, event] inside the _status object
+      // this.worker.onmessage = (e) => (this._status[e.data.msg] = ['done', e])
+
+      // // console.log("Line 820 working")
+      // this.worker.onerror = (e) => (this._status[e.data.msg] = ['error', e])
+
+
+      cv.load();
+
+
+
+
+
+
       this.canvas.width = this.$refs.input_img.width;
       this.canvas.height = this.$refs.input_img.height;
       this.canvas.getContext('2d').drawImage(this.$refs.input_img,0,0);
