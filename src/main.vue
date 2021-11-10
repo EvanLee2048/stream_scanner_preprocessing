@@ -388,6 +388,11 @@ export default {
       }
       if(this.cv){
         if(!this.computing){
+
+          // let mat_testing = new cv.Mat();
+
+          // console.log(mat_testing);
+
           const canvasCvSize = 480; /** cropped space size */
           const minLineLength = 150;
           const maxLineLength = 400;
@@ -404,6 +409,7 @@ export default {
           let mat = this.cv.imread(canvasCv); // load source image into cv
           console.log("imread finish, Time taken - ", (new Date().getTime()-start));
           let dst = new this.cv.Mat();           // Creating a new copy of the cv.
+          
           this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);
           mat = dst;
 
@@ -437,6 +443,9 @@ export default {
           this.cv.adaptiveThreshold(mat, mat, 255, this.cv.ADAPTIVE_THRESH_MEAN_C, this.cv.THRESH_BINARY, canvasCvSize/2-1, 0);
           // this.cv.threshold(mat, mat, 127, 255, this.cv.THRESH_BINARY);
           console.log("threshold finish, Time taken - ", (new Date().getTime()-start));
+
+
+
           let M = this.cv.Mat.ones(7, 7, this.cv.CV_8U);
           this.cv.morphologyEx(mat, mat, this.cv.MORPH_OPEN, M);
           console.log("morphologyEx finish, Time taken - ", (new Date().getTime()-start));
@@ -812,19 +821,8 @@ export default {
           .catch(err => console.log(msg+' error : '+JSON.stringify(err)));
     },
     init(){
-      // // Worker code goes here
-      // this._status = {}
-      // this.worker = new Worker('/js/cv.worker.js') // load worker
-
-      // // Capture events and save [status, event] inside the _status object
-      // this.worker.onmessage = (e) => (this._status[e.data.msg] = ['done', e])
-
-      // // console.log("Line 820 working")
-      // this.worker.onerror = (e) => (this._status[e.data.msg] = ['error', e])
-
-
+   
       cv.load();
-
 
 
 

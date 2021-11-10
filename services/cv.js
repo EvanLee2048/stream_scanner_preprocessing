@@ -38,7 +38,16 @@ class cv {
     this.worker.onerror = (e) => (this._status[e.data.msg] = ['error', e])
     return this._dispatch({ msg: 'load' })
   }
+
+  imageProcessing(payload) {
+    return this._dispatch({ msg: 'imageProcessing', payload })
+  }
+
+  
+
 }
+
+
 
 // Export the same instant everywhere
 export default new cv()
