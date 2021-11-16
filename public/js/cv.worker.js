@@ -32,6 +32,7 @@
 
         // Import Webassembly script
         self.importScripts('opencv.js')
+        // self.importScripts('opencv_min.js')
 
         waitForOpencv(function (success) {
           if (success) postMessage({ msg: e.data.msg })

@@ -88,11 +88,11 @@
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492390.jpg"/> -->            <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492391.jpg"/>-->             <!-- Output : No contour - Poor Image Quality-->
           <!-- <img ref="input_img" alt="full image" style="width: 320px; height: 320px;" @load="init" src="@/full_screen_images/1632715023.jpg"/> -->
-<!--          <img ref="input_img" alt="full image" style="width: 320px; height: 320px;" @load="init" src="@/full_screen_images/1632715024.jpg"/>-->
+         <!-- <img ref="input_img" alt="full image" style="width: 320px; height: 320px;" @load="init" src="@/full_screen_images/1632715024.jpg"/> -->
 
 
         <!-- QR Code -->
-        <img ref="input_img" alt="qr_code_image" style="width: 320px; height: 320px;" @load="init" src="@/qr_code/QR_Code_test.png"/>
+        <img id="input_img" ref="input_img" alt="qr_code_image" style="width: 320px; height: 320px;" @load="init" src="@/qr_code/QR_Code_test.png"/>
 
 
         </v-col>
@@ -114,7 +114,10 @@
           <p class="text-center text-h4 my-2">img5</p>
           <canvas ref="img5" width="1110" height="1110"></canvas>    <!-- img -->
           <p class="text-center text-h4 my-2">img6</p>
-          <canvas ref="img6" width="320" height="320"></canvas>    <!-- img1 -->
+          <canvas ref="img6" width="320" height="320"></canvas>      <!-- img1 -->
+
+
+
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -155,7 +158,7 @@
 
 <script>
 import axios from "axios";
-import cv from '../services/cv'
+// import cv from '../services/cv'
 
 
 export default {
@@ -406,11 +409,22 @@ export default {
           let start = new Date().getTime();
           this.computing = true;
           let mat = this.cv.imread(canvasCv); // load source image into cv
+
+
           console.log("imread finish, Time taken - ", (new Date().getTime()-start));
-          let dst = new this.cv.Mat();           // Creating a new copy of the cv.
+          let dst = new this.cv.Mat();           // Creating an empty Matrix of the cv.
+
+          //This part is concerned with detecting the QR using the library 
+          let qr_detector = new this.cv.QRCodeDetector();
+          let data = qr_detector.detectAndDecode(mat);
+          console.log(data);
+
           
-          this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);
+          
+          
+          this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);   
           mat = dst;
+
 
           // TODO : Your opencv image processing here!!!!!!!!
           // https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
@@ -805,8 +819,6 @@ export default {
             this.remoteDecode('original');
           },
 
-
-
     remoteDecode(msg){
       const img = this.$refs.img3.toDataURL(this.type, this.quality);
       console.log(msg+' size : '+JSON.stringify(img.length));
@@ -828,9 +840,13 @@ export default {
 
     qrCodeScanner(){
 
-       let qr_detector = this.cv.QRCodeDetector();
+          // let canvasCv = document.createElement('canvas');
+  
+          // let mat = this.cv.imread(document.getElementById('input_img'));    // load source image into cv
+          // let dst = new this.cv.Mat();           // Creating a new copy of the cv.
 
-       console.log(qr_detector);
+          // console.log("Line  853", dst);
+          // this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);
 
     },
 
@@ -839,7 +855,7 @@ export default {
 
     init(){
    
-      cv.load();
+      // cv.load();
 
       this.canvas.width = this.$refs.input_img.width;
       this.canvas.height = this.$refs.input_img.height;
