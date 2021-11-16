@@ -87,8 +87,14 @@
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492389.jpg"/> -->           <!--       Output : Unsatisfactory - Cropping Issue -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492390.jpg"/> -->            <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492391.jpg"/>-->             <!-- Output : No contour - Poor Image Quality-->
-          <img ref="input_img" alt="full image" style="width: 320px; height: 320px;" @load="init" src="@/full_screen_images/1632715023.jpg"/>
+          <!-- <img ref="input_img" alt="full image" style="width: 320px; height: 320px;" @load="init" src="@/full_screen_images/1632715023.jpg"/> -->
 <!--          <img ref="input_img" alt="full image" style="width: 320px; height: 320px;" @load="init" src="@/full_screen_images/1632715024.jpg"/>-->
+
+
+        <!-- QR Code -->
+        <img ref="input_img" alt="qr_code_image" style="width: 320px; height: 320px;" @load="init" src="@/qr_code/QR_Code_test.png"/>
+
+
         </v-col>
         <v-col class="text-center">
           <p class="text-center text-h4 my-2">Processed Image</p>
@@ -820,6 +826,18 @@ export default {
           .then(response => console.log(msg+' decode message : '+JSON.stringify(response.data)))
           .catch(err => console.log(msg+' error : '+JSON.stringify(err)));
     },
+
+    qrCodeScanner(){
+
+       let qr_detector = this.cv.QRCodeDetector();
+
+       console.log(qr_detector);
+
+    },
+
+
+
+
     init(){
    
       cv.load();
@@ -839,6 +857,7 @@ export default {
       this.$refs.img.getContext("2d").putImageData(imgData, 0, 0);
       // this.remoteDecode('original');
       this.opencvCompute();
+      this.qrCodeScanner();
       // let imgData = this.canvas.getContext('2d').getImageData(0, 0, this.$refs.input_img.width, this.$refs.input_img.height);
       // this.lightSpot(imgData.data, imgData.width);
       // this.drawCorner(imgData);

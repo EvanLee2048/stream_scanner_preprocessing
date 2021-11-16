@@ -31,7 +31,13 @@ class cv {
    */
   load() {
     this._status = {}
-    this.worker = new Worker('/js/cv.worker.js') // load worker
+    //Worker 1
+    this.worker = new Worker('/js/cv.worker.js') 
+    //Worker 2
+    this.worker_2 = new Worker('/js/cv.worker.js')
+    //Worker 3
+    this.worker_2 = new Worker('/js/cv.worker.js')
+
 
     // Capture events and save [status, event] inside the _status object
     this.worker.onmessage = (e) => (this._status[e.data.msg] = ['done', e])
@@ -42,9 +48,6 @@ class cv {
   imageProcessing(payload) {
     return this._dispatch({ msg: 'imageProcessing', payload })
   }
-
-  
-
 }
 
 
