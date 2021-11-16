@@ -385,19 +385,12 @@ export default {
         image[(imageWH/2+y*imageWH)*4+2] = 0;
       }
     },
-    opencvCompute(){
-      if(window.cv && window.cv.Mat && !this.cv){
-        this.cv = window.cv;
-        // console.log('opencv loaded');
-      } else if(!this.cv){
-        setTimeout(() => {this.opencvCompute()}, 100);
-      }
+    async opencvCompute(){
+      this.cv = await window.cv;
       if(this.cv){
         if(!this.computing){
 
           // let mat_testing = new cv.Mat();
-
-          // console.log(mat_testing);
 
           const canvasCvSize = 480; /** cropped space size */
           const minLineLength = 150;
@@ -507,6 +500,12 @@ export default {
             });
             this.cv.drawContours(dst2, contours, i, new this.cv.Scalar(255,0,0), 1, this.cv.LINE_8, hierarchy, 100)
           }
+          M.delete();
+          mat.delete();
+          hierarchy.delete();
+          contours.delete();
+          console.log("opencv part, Time taken - ", (new Date().getTime()-start));
+
           for (let i=0; i<contourPositions.length; ++i){
             for (let j=i+1; j<contourPositions.length; ++j){
               let m = (contourPositions[j].y-contourPositions[i].y)/(contourPositions[j].x-contourPositions[i].x);
@@ -841,10 +840,6 @@ export default {
     init(){
    
       cv.load();
-
-
-
-
 
       this.canvas.width = this.$refs.input_img.width;
       this.canvas.height = this.$refs.input_img.height;
