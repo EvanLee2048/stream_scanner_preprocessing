@@ -88,11 +88,11 @@
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492390.jpg"/> -->            <!-- Output : No contour - Poor Image Quality -->
          <!-- <img ref="input_img" alt="full image" style="width: 720px; height: 720px;" @load="init" src="@/full_screen_images/1632492391.jpg"/>-->             <!-- Output : No contour - Poor Image Quality-->
           <!-- <img ref="input_img" alt="full image" style="width: 320px; height: 320px;" @load="init" src="@/full_screen_images/1632715023.jpg"/> -->
-         <!-- <img ref="input_img" alt="full image" style="width: 320px; height: 320px;" @load="init" src="@/full_screen_images/1632715024.jpg"/> -->
+         <img ref="input_img" alt="full image" style="width: 320px; height: 320px;" @load="init" src="@/full_screen_images/1632715024.jpg"/>
 
 
         <!-- QR Code -->
-        <img id="input_img" ref="input_img" alt="qr_code_image" style="width: 320px; height: 320px;" @load="init" src="@/qr_code/QR_Code_test.png"/>
+        <!-- <img id="input_img" ref="input_img" alt="qr_code_image" style="width: 320px; height: 320px;" @load="init" src="@/qr_code/QR_Code_test.png"/> -->
 
 
         </v-col>
@@ -393,31 +393,31 @@ export default {
       if(this.cv){
         if(!this.computing){
 
-          // let mat_testing = new cv.Mat();
-
-          const canvasCvSize = 480; /** cropped space size */
+          /** cropped space size */
+          const canvasCvSize = 480; 
           const minLineLength = 150;
           const maxLineLength = 400;
           const cropMargin = 30;
 
           let canvasCv = document.createElement('canvas');
-          let canvasCvCtx = canvasCv.getContext('2d');         //Canvas 0 ---> B&W
+          let canvasCvCtx = canvasCv.getContext('2d');         
           canvasCv.width = canvasCvSize;
           canvasCv.height = canvasCvSize;
           canvasCvCtx.drawImage(this.canvas,0,0,canvasCv.width,canvasCv.height,0,0,canvasCv.width,canvasCv.height);
 
           let start = new Date().getTime();
           this.computing = true;
-          let mat = this.cv.imread(canvasCv); // load source image into cv
+          // Loading source image into cv
+          let mat = this.cv.imread(canvasCv); 
 
 
           console.log("imread finish, Time taken - ", (new Date().getTime()-start));
-          let dst = new this.cv.Mat();           // Creating an empty Matrix of the cv.
+          let dst = new this.cv.Mat();         
 
           //This part is concerned with detecting the QR using the library 
-          let qr_detector = new this.cv.QRCodeDetector();
-          let data = qr_detector.detectAndDecode(mat);
-          console.log(data);
+          // let qr_detector = new this.cv.QRCodeDetector();
+          // let data = qr_detector.detectAndDecode(mat);
+          // console.log(data);
 
           
           
