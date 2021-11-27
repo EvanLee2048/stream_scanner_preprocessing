@@ -110,11 +110,14 @@
        <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/17.png"/> -->
        <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/19.png"/> -->
 <!--  -->
+
+
+
         </v-col>
         <v-col class="text-center">
           <p class="text-center text-h4 my-2">Processed Image</p>
-          <canvas ref="img" width="1110" height="1110"></canvas>    <!-- Shows the output image, canvas -->
-          <canvas ref="img1" width="1110" height="1110"></canvas>    <!-- Shows the output image, canvas -->
+          <canvas ref="img" width="1110" height="1110"></canvas>   <!-- Shows the output image, canvas -->
+          <canvas ref="img1" width="1110" height="1110"></canvas>  <!-- Shows the output image, canvas -->
           <canvas ref="img2" width="320" height="320"></canvas>    <!-- Shows the output image, canvas -->
           <canvas ref="img3" width="320" height="320"></canvas>    <!-- Shows the output image, canvas -->
          
@@ -399,7 +402,6 @@ export default {
     opencvCompute(){
       if(window.cv && window.cv.Mat && !this.cv){
         this.cv = window.cv;
-        // console.log('opencv loaded');
       } else if(!this.cv){
         setTimeout(() => {this.opencvCompute()}, 100);
       }
@@ -411,7 +413,7 @@ export default {
           const cropMargin = 30;
 
           let canvasCv = document.createElement('canvas');
-          let canvasCvCtx = canvasCv.getContext('2d');         //Canvas 0 ---> B&W
+          let canvasCvCtx = canvasCv.getContext('2d');      
           canvasCv.width = canvasCvSize;
           canvasCv.height = canvasCvSize;
           const sxSpace = 50;
@@ -426,30 +428,6 @@ export default {
           this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);
           mat = dst;
 
-          // TODO : Your opencv image processing here!!!!!!!!
-          // https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
-
-          //--------------- Brightness and contrast adjustments
-          // let alpha = 1.2; /*< Simple contrast control ,range : 0 to infinite */
-          // let beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
-          // mat.convertTo(dst, -1, alpha, beta);
-          // this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
-
-          //--------------- Only applies Brightness adjustments if it makes jpeg data bigger
-          // let original_jpeg = this.canvas.toDataURL(this.type, this.quality);
-          // let brightness_adjustment_jpeg = this.$refs.img.toDataURL(this.type, this.quality);
-          // if(brightness_adjustment_jpeg.length > original_jpeg.length*1.2 &&
-          //     brightness_adjustment_jpeg.length > this.minImageSize){
-          //   mat = dst;
-          // }
-          // this.remoteDecode('contrast adjustments '+alpha);
-
-          //--------------- Histogram solution part
-          // let dst = new this.cv.Mat();
-          // this.cv.cvtColor(mat, mat, this.cv.COLOR_RGBA2GRAY, 0);
-          // this.cv.equalizeHist(mat, dst);
-          // this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
-          // this.remoteDecode('equalizeHist');
 
           //BINARY INVERSION
 
@@ -470,18 +448,8 @@ export default {
  
             let contour = contours.get(i);
             let area = this.cv.contourArea(contour, false);
-
-            /**
-             * aspect ratio of width to height of bounding rect of the object
-             * we are finding square shape, so expect aspect ratio is about to 1
-             * */
             let rect = this.cv.boundingRect(contour);
             let aspectRatio = rect.width / rect.height;
-            /**
-             * Solidity is the ratio of contour area to its convex hull area
-             * filter arbitrary shape objects
-             * */
-
             let hull = new this.cv.Mat();
             this.cv.convexHull(contour, hull, false, true);
             let hullArea = this.cv.contourArea(hull, false);
@@ -501,14 +469,14 @@ export default {
             for (let j=i+1; j<contourPositions.length; ++j){
               let m = (contourPositions[j].y-contourPositions[i].y)/(contourPositions[j].x-contourPositions[i].x);
               let angle = Math.atan(m) * (180/Math.PI);
-              //Put the length condition here
+              //Length condition 
               let distance = ((contourPositions[i].x-contourPositions[j].x)**2 + (contourPositions[i].y-contourPositions[j].y)**2)**0.5;
               if (distance > minLineLength && distance < maxLineLength){
                 lines.push({line:[contourPositions[i].idx,contourPositions[j].idx], a: angle, d: distance});
               }
             }
           }
-          /** filter only parallel lines */
+          //Filtering Parallel Lines
           lines = Array.from(new Set(lines.flatMap((l1, i) => {
             let pt11 = contourPositions.find(pos => pos.idx === l1.line[0]);
             let pt12 = contourPositions.find(pos => pos.idx === l1.line[1]);
@@ -574,30 +542,11 @@ export default {
 
             ctx5.drawImage(this.canvas, 0, 0, 720, 720,  0, 0, 720, 720);
 
-
-            // if(Math.abs(rotateRadian) > 15 * Math.PI / 180){
-            //   ctx3.rotate(rotateRadian);
-            //   ctx3.translate(0,minY-posY[1]+cropMargin);
-            //   ctx3.scale(1/Math.cos(Math.abs(rotateRadian)), 1/Math.cos(Math.abs(rotateRadian)));
-            //   ctx3.drawImage(this.$refs.img3, 0, 0, this.imageSize, this.imageSize,
-            //       0,-cropMargin, this.imageSize+cropMargin*2, this.imageSize+cropMargin*2);
-            // }
-
             if(rotateRadian > 45 * Math.PI / 180){
               rotateRadian -= 90 * Math.PI / 180;
             } else if(rotateRadian < -45 * Math.PI / 180){
               rotateRadian += 90 * Math.PI / 180;
             }
-
-            // if(Math.abs(rotateRadian) > 15 * Math.PI / 180){
-            //   ctx3.rotate(rotateRadian);
-            //     // ctx3.translate(0,minY-posY[1]+cropMargin);
-            //     // ctx3.scale(1/Math.cos(Math.abs(rotateRadian)), 1/Math.cos(Math.abs(rotateRadian)));
-            //     ctx3.drawImage(this.$refs.img3, 0, 0, this.imageSize, this.imageSize,
-            //         0,-cropMargin,
-            //         this.imageSize/Math.cos(Math.abs(rotateRadian))+cropMargin*2,
-            //         this.imageSize/Math.cos(Math.abs(rotateRadian))+cropMargin*2);
-            // }
 
               //New Code
             
@@ -693,12 +642,6 @@ export default {
           this.cv.imshow(this.$refs.img4, mat);  //Binary Inversion on the rotated image
           
           
-          /**
-           * 02 September 2021
-           * https://docs.opencv.org/4.5.2/d5/daa/tutorial_js_contours_begin.html
-           * Contours can be explained simply as a curve joining all the continuous points (along the boundary), having same color or intensity.
-           * The contours are a useful tool for shape analysis and object detection and recognition.
-           * */
           let contours = new this.cv.MatVector();
           let hierarchy = new this.cv.Mat();
           this.cv.findContours(mat, contours, hierarchy, this.cv.RETR_CCOMP, this.cv.CHAIN_APPROX_SIMPLE);
