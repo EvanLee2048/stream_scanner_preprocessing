@@ -339,23 +339,20 @@ export default {
         }
       }
 
-
-      let result_x = [];       //Coordinates of the blue dot
+      //Coordinates of the blue dot
+      let result_x = [];       
       let result_y = [];
-
-      // console.log(lightSpotX);
-      // console.log(lightSpotY);
 
       // Draw Detected Light Spot
       
-      for (let y=0;y<imageWH; y++){ // loop over y-axis    //Blue dot ---> check both x and y axis
+      for (let y=0;y<imageWH; y++){ 
         lightSpotX[y].filter(x => lightSpotY[x].includes(y)).forEach(x => {
           let k = x+y*imageWH << 2;
           image[k] = 0;
           image[k+1] = 0;
           image[k+2] = 255;
           
-          result_x.push(x);        //push = append in python
+          result_x.push(x);       
           result_y.push(y);
         });
       }
@@ -382,7 +379,7 @@ export default {
         console.log("There is no bright spot");
       }
 
-      //!!!! New Code --> Bright Spot Detect
+      //Bright Spot Detect
       let median_x = result_x.sort()[Math.floor(result_x.length/2)];  //Purple cursor ---> used to mark the light spot
       let median_y = result_y.sort()[Math.floor(result_y.length/2)];
       for(let x=median_x-4;x<median_x+5; x++){ //Purple
@@ -489,10 +486,10 @@ export default {
               let pt22 = contourPositions.find(pos => pos.idx === l2.line[1]);
               return (idx!==i && /** not itself */
                       !l1.line.some(r=> l2.line.includes(r)) &&
-                      ((pt11.x-pt21.x)**2+(pt11.y-pt21.y)**2)**0.5 > minLineLength && /** contours not too close */
-                      ((pt11.x-pt22.x)**2+(pt11.y-pt22.y)**2)**0.5 > minLineLength && /** contours not too close */
-                      ((pt12.x-pt21.x)**2+(pt12.y-pt21.y)**2)**0.5 > minLineLength && /** contours not too close */
-                      ((pt12.x-pt22.x)**2+(pt12.y-pt22.y)**2)**0.5 > minLineLength && /** contours not too close */
+                      ((pt11.x-pt21.x)**2+(pt11.y-pt21.y)**2)**0.5 > minLineLength &&       /** contours not too close */
+                      ((pt11.x-pt22.x)**2+(pt11.y-pt22.y)**2)**0.5 > minLineLength &&       /** contours not too close */
+                      ((pt12.x-pt21.x)**2+(pt12.y-pt21.y)**2)**0.5 > minLineLength &&       /** contours not too close */
+                      ((pt12.x-pt22.x)**2+(pt12.y-pt22.y)**2)**0.5 > minLineLength &&       /** contours not too close */
                       (Math.abs(l2.a-l1.a) < 5 || Math.abs(180-Math.abs(l2.a-l1.a)) < 5) && /** about the same angle */
                       Math.abs(l2.d-l1.d) < 10)});/** about the same length */
           })));
