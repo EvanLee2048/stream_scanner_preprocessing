@@ -110,11 +110,14 @@
        <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/17.png"/> -->
        <!-- <img ref="input_img" alt="angled image" style="width: 720px; height: 720px;" @load="init" src="@/angled/19.png"/> -->
 <!--  -->
+
+
+
         </v-col>
         <v-col class="text-center">
           <p class="text-center text-h4 my-2">Processed Image</p>
-          <canvas ref="img" width="1110" height="1110"></canvas>    <!-- Shows the output image, canvas -->
-          <canvas ref="img1" width="1110" height="1110"></canvas>    <!-- Shows the output image, canvas -->
+          <canvas ref="img" width="1110" height="1110"></canvas>   <!-- Shows the output image, canvas -->
+          <canvas ref="img1" width="1110" height="1110"></canvas>  <!-- Shows the output image, canvas -->
           <canvas ref="img2" width="320" height="320"></canvas>    <!-- Shows the output image, canvas -->
           <canvas ref="img3" width="320" height="320"></canvas>    <!-- Shows the output image, canvas -->
          
@@ -190,35 +193,36 @@ export default {
     }
   },
   methods: {
-    cornerDetect(image, pos){  //Determine if image is relevant
+    //Determine if image is relevant
+    cornerDetect(image, pos){  
       let w = image.width;                            
       let h = image.height;
-      let surface= new Array(w+h-1).fill(0);    //What is the surface variable representing ?     --->  45 degree line
-      let boundary = w/5;        //Looking for edge              //Which boundary is this ?  --->
+      let surface= new Array(w+h-1).fill(0);    
+      let boundary = w/5;        
       let binaryData = image.data.filter((n,idx) => idx%4===0).map(d => d > 127 ? 0 : 1);
 
-      if (pos==='tl') { // surface direction : from top left to bottom right
+      if (pos==='tl') { 
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
             surface[y + x] += binaryData[yw + x];
           }
         }
-      } else if (pos==='tr') { // surface direction : from top right to bottom left
+      } else if (pos==='tr') { 
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
             surface[w - 1 - x + y] += binaryData[yw + x];
           }
         }
-      } else if (pos==='bl') { // surface direction : from bottom left to top right
+      } else if (pos==='bl') { 
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
             surface[surface.length - w + x - y] += binaryData[yw + x];
           }
         }
-      } else if (pos==='br') { // surface direction : from bottom right to top left
+      } else if (pos==='br') { 
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
@@ -265,7 +269,9 @@ export default {
         }
       }
     },
-    drawCorner(image){ //Drawing the blue line on the corners ----> Scanning for black square on corners
+
+    //Drawing the blue line on the corners ----> Scanning for black square on corners
+    drawCorner(image){ 
       const wh = 2*this.cornerSize;
       const imageWH = image.width;
       for (var i=0; i<image.data.length; i+=4) {
@@ -276,18 +282,18 @@ export default {
         }
       }
     },
-    lightSpot(image, imageWH){        //imageWH --> the width and height of the image, square so width = height ----> 320
-      let startXY = 50;               //Probably the starting point of blue dot
-      let n = 13;                     //size of xQueue ---> Consecutive white pixels to declare it as blue spot
-      let step = 4;                   //Spacing between the blue dots
+    lightSpot(image, imageWH){      
+      let startXY = 50;               
+      let n = 13;                   
+      let step = 4;                   
 
-      let lightSpotX = Array.from(Array(imageWH), () => new Array(0));   // Making an array with the amount of pixels of image (320px)
+      let lightSpotX = Array.from(Array(imageWH), () => new Array(0));   
       let lightSpotY = Array.from(Array(imageWH), () => new Array(0));
-      let crop_imageWH = imageWH-2*startXY; //Value is 220, basically lowering the area of search
+      let crop_imageWH = imageWH-2*startXY; 
       let offset = (n+1)/2;
       let offsetXY = n+startXY;
 
-      for (let y=startXY; y<crop_imageWH+startXY; y++) { // y-axis --> searching y-axis
+      for (let y=startXY; y<crop_imageWH+startXY; y++) { 
         if (y%step===0){
           let xQueue = [];
           for (let x=startXY; x<crop_imageWH+startXY; x++) { 
@@ -399,7 +405,6 @@ export default {
     opencvCompute(){
       if(window.cv && window.cv.Mat && !this.cv){
         this.cv = window.cv;
-        // console.log('opencv loaded');
       } else if(!this.cv){
         setTimeout(() => {this.opencvCompute()}, 100);
       }
@@ -411,7 +416,7 @@ export default {
           const cropMargin = 30;
 
           let canvasCv = document.createElement('canvas');
-          let canvasCvCtx = canvasCv.getContext('2d');         //Canvas 0 ---> B&W
+          let canvasCvCtx = canvasCv.getContext('2d');      
           canvasCv.width = canvasCvSize;
           canvasCv.height = canvasCvSize;
           const sxSpace = 50;
@@ -421,38 +426,15 @@ export default {
 
           let start = new Date().getTime();
           this.computing = true;
-          let mat = this.cv.imread(canvasCv);    // load source image into cv
-          let dst = new this.cv.Mat();           // Creating a new copy of the cv.
+          // loading source image into cv
+          let mat = this.cv.imread(canvasCv);   
+          // Creating a new copy of the cv. 
+          let dst = new this.cv.Mat();           
           this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);
           mat = dst;
 
-          // TODO : Your opencv image processing here!!!!!!!!
-          // https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
 
-          //--------------- Brightness and contrast adjustments
-          // let alpha = 1.2; /*< Simple contrast control ,range : 0 to infinite */
-          // let beta = 0;    /*< Simple brightness control ,range : -255 to 255 */
-          // mat.convertTo(dst, -1, alpha, beta);
-          // this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
-
-          //--------------- Only applies Brightness adjustments if it makes jpeg data bigger
-          // let original_jpeg = this.canvas.toDataURL(this.type, this.quality);
-          // let brightness_adjustment_jpeg = this.$refs.img.toDataURL(this.type, this.quality);
-          // if(brightness_adjustment_jpeg.length > original_jpeg.length*1.2 &&
-          //     brightness_adjustment_jpeg.length > this.minImageSize){
-          //   mat = dst;
-          // }
-          // this.remoteDecode('contrast adjustments '+alpha);
-
-          //--------------- Histogram solution part
-          // let dst = new this.cv.Mat();
-          // this.cv.cvtColor(mat, mat, this.cv.COLOR_RGBA2GRAY, 0);
-          // this.cv.equalizeHist(mat, dst);
-          // this.cv.imshow(this.$refs.img, dst); // load cv result to canvas (processed image)
-          // this.remoteDecode('equalizeHist');
-
-          //BINARY INVERSION
-
+          //Binary Inversion
           this.cv.adaptiveThreshold(mat, mat, 255, this.cv.ADAPTIVE_THRESH_MEAN_C, this.cv.THRESH_BINARY, canvasCvSize/2-1, 0);
           // this.cv.threshold(mat, mat, 127, 255, this.cv.THRESH_BINARY);
           let M = this.cv.Mat.ones(7, 7, this.cv.CV_8U);
@@ -470,18 +452,8 @@ export default {
  
             let contour = contours.get(i);
             let area = this.cv.contourArea(contour, false);
-
-            /**
-             * aspect ratio of width to height of bounding rect of the object
-             * we are finding square shape, so expect aspect ratio is about to 1
-             * */
             let rect = this.cv.boundingRect(contour);
             let aspectRatio = rect.width / rect.height;
-            /**
-             * Solidity is the ratio of contour area to its convex hull area
-             * filter arbitrary shape objects
-             * */
-
             let hull = new this.cv.Mat();
             this.cv.convexHull(contour, hull, false, true);
             let hullArea = this.cv.contourArea(hull, false);
@@ -501,14 +473,14 @@ export default {
             for (let j=i+1; j<contourPositions.length; ++j){
               let m = (contourPositions[j].y-contourPositions[i].y)/(contourPositions[j].x-contourPositions[i].x);
               let angle = Math.atan(m) * (180/Math.PI);
-              //Put the length condition here
+              //Length condition 
               let distance = ((contourPositions[i].x-contourPositions[j].x)**2 + (contourPositions[i].y-contourPositions[j].y)**2)**0.5;
               if (distance > minLineLength && distance < maxLineLength){
                 lines.push({line:[contourPositions[i].idx,contourPositions[j].idx], a: angle, d: distance});
               }
             }
           }
-          /** filter only parallel lines */
+          //Filtering Parallel Lines
           lines = Array.from(new Set(lines.flatMap((l1, i) => {
             let pt11 = contourPositions.find(pos => pos.idx === l1.line[0]);
             let pt12 = contourPositions.find(pos => pos.idx === l1.line[1]);
@@ -574,38 +546,17 @@ export default {
 
             ctx5.drawImage(this.canvas, 0, 0, 720, 720,  0, 0, 720, 720);
 
-
-            // if(Math.abs(rotateRadian) > 15 * Math.PI / 180){
-            //   ctx3.rotate(rotateRadian);
-            //   ctx3.translate(0,minY-posY[1]+cropMargin);
-            //   ctx3.scale(1/Math.cos(Math.abs(rotateRadian)), 1/Math.cos(Math.abs(rotateRadian)));
-            //   ctx3.drawImage(this.$refs.img3, 0, 0, this.imageSize, this.imageSize,
-            //       0,-cropMargin, this.imageSize+cropMargin*2, this.imageSize+cropMargin*2);
-            // }
-
             if(rotateRadian > 45 * Math.PI / 180){
               rotateRadian -= 90 * Math.PI / 180;
             } else if(rotateRadian < -45 * Math.PI / 180){
               rotateRadian += 90 * Math.PI / 180;
             }
 
-            // if(Math.abs(rotateRadian) > 15 * Math.PI / 180){
-            //   ctx3.rotate(rotateRadian);
-            //     // ctx3.translate(0,minY-posY[1]+cropMargin);
-            //     // ctx3.scale(1/Math.cos(Math.abs(rotateRadian)), 1/Math.cos(Math.abs(rotateRadian)));
-            //     ctx3.drawImage(this.$refs.img3, 0, 0, this.imageSize, this.imageSize,
-            //         0,-cropMargin,
-            //         this.imageSize/Math.cos(Math.abs(rotateRadian))+cropMargin*2,
-            //         this.imageSize/Math.cos(Math.abs(rotateRadian))+cropMargin*2);
-            // }
-
-              //New Code
-            
-            
             let proxyDistance = (lines[0].d + lines[1].d +lines[2].d + lines[3].d)/4
             let proxysWidth = 1.282*proxyDistance;
             let proxysHeight = 1.282*proxyDistance;
-            let translate_x = 360;   //Making rotation about the center
+            //Making rotation about the center
+            let translate_x = 360;   
             let translate_y = 360;
 
             console.log(translate_x, translate_y);
@@ -677,14 +628,14 @@ export default {
           const sySpace = 150;
           
           canvasCvCtx.drawImage(this.$refs.img4,sxSpace,sySpace,canvasCv.width,canvasCv.height,0,0,canvasCv.width,canvasCv.height);
-
-          let mat = this.cv.imread(canvasCv);    // load source image into cv
-          let dst = new this.cv.Mat();           // Creating a new copy of the cv.
+          // load source image into cv
+          let mat = this.cv.imread(canvasCv);    
+          // Creating a new copy of the cv.
+          let dst = new this.cv.Mat();           
           this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);
           mat = dst;
 
-          //BINARY INVERSION
-
+          //Binary Inversion
           this.cv.adaptiveThreshold(mat, mat, 255, this.cv.ADAPTIVE_THRESH_MEAN_C, this.cv.THRESH_BINARY, canvasCvSize/2-1, 0);
           // this.cv.threshold(mat, mat, 127, 255, this.cv.THRESH_BINARY);
           let M = this.cv.Mat.ones(7, 7, this.cv.CV_8U);
@@ -693,12 +644,6 @@ export default {
           this.cv.imshow(this.$refs.img4, mat);  //Binary Inversion on the rotated image
           
           
-          /**
-           * 02 September 2021
-           * https://docs.opencv.org/4.5.2/d5/daa/tutorial_js_contours_begin.html
-           * Contours can be explained simply as a curve joining all the continuous points (along the boundary), having same color or intensity.
-           * The contours are a useful tool for shape analysis and object detection and recognition.
-           * */
           let contours = new this.cv.MatVector();
           let hierarchy = new this.cv.Mat();
           this.cv.findContours(mat, contours, hierarchy, this.cv.RETR_CCOMP, this.cv.CHAIN_APPROX_SIMPLE);
