@@ -193,35 +193,36 @@ export default {
     }
   },
   methods: {
-    cornerDetect(image, pos){  //Determine if image is relevant
+    //Determine if image is relevant
+    cornerDetect(image, pos){  
       let w = image.width;                            
       let h = image.height;
-      let surface= new Array(w+h-1).fill(0);    //What is the surface variable representing ?     --->  45 degree line
-      let boundary = w/5;        //Looking for edge              //Which boundary is this ?  --->
+      let surface= new Array(w+h-1).fill(0);    
+      let boundary = w/5;        
       let binaryData = image.data.filter((n,idx) => idx%4===0).map(d => d > 127 ? 0 : 1);
 
-      if (pos==='tl') { // surface direction : from top left to bottom right
+      if (pos==='tl') { 
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
             surface[y + x] += binaryData[yw + x];
           }
         }
-      } else if (pos==='tr') { // surface direction : from top right to bottom left
+      } else if (pos==='tr') { 
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
             surface[w - 1 - x + y] += binaryData[yw + x];
           }
         }
-      } else if (pos==='bl') { // surface direction : from bottom left to top right
+      } else if (pos==='bl') { 
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
             surface[surface.length - w + x - y] += binaryData[yw + x];
           }
         }
-      } else if (pos==='br') { // surface direction : from bottom right to top left
+      } else if (pos==='br') { 
         for (let y = 0; y < h; y++) {
           let yw = y * w;
           for (let x = 0; x < w; x++) {
@@ -268,7 +269,9 @@ export default {
         }
       }
     },
-    drawCorner(image){ //Drawing the blue line on the corners ----> Scanning for black square on corners
+
+    //Drawing the blue line on the corners ----> Scanning for black square on corners
+    drawCorner(image){ 
       const wh = 2*this.cornerSize;
       const imageWH = image.width;
       for (var i=0; i<image.data.length; i+=4) {
@@ -279,18 +282,18 @@ export default {
         }
       }
     },
-    lightSpot(image, imageWH){        //imageWH --> the width and height of the image, square so width = height ----> 320
-      let startXY = 50;               //Probably the starting point of blue dot
-      let n = 13;                     //size of xQueue ---> Consecutive white pixels to declare it as blue spot
-      let step = 4;                   //Spacing between the blue dots
+    lightSpot(image, imageWH){      
+      let startXY = 50;               
+      let n = 13;                   
+      let step = 4;                   
 
-      let lightSpotX = Array.from(Array(imageWH), () => new Array(0));   // Making an array with the amount of pixels of image (320px)
+      let lightSpotX = Array.from(Array(imageWH), () => new Array(0));   
       let lightSpotY = Array.from(Array(imageWH), () => new Array(0));
-      let crop_imageWH = imageWH-2*startXY; //Value is 220, basically lowering the area of search
+      let crop_imageWH = imageWH-2*startXY; 
       let offset = (n+1)/2;
       let offsetXY = n+startXY;
 
-      for (let y=startXY; y<crop_imageWH+startXY; y++) { // y-axis --> searching y-axis
+      for (let y=startXY; y<crop_imageWH+startXY; y++) { 
         if (y%step===0){
           let xQueue = [];
           for (let x=startXY; x<crop_imageWH+startXY; x++) { 
@@ -423,14 +426,15 @@ export default {
 
           let start = new Date().getTime();
           this.computing = true;
-          let mat = this.cv.imread(canvasCv);    // load source image into cv
-          let dst = new this.cv.Mat();           // Creating a new copy of the cv.
+          // loading source image into cv
+          let mat = this.cv.imread(canvasCv);   
+          // Creating a new copy of the cv. 
+          let dst = new this.cv.Mat();           
           this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);
           mat = dst;
 
 
-          //BINARY INVERSION
-
+          //Binary Inversion
           this.cv.adaptiveThreshold(mat, mat, 255, this.cv.ADAPTIVE_THRESH_MEAN_C, this.cv.THRESH_BINARY, canvasCvSize/2-1, 0);
           // this.cv.threshold(mat, mat, 127, 255, this.cv.THRESH_BINARY);
           let M = this.cv.Mat.ones(7, 7, this.cv.CV_8U);
@@ -548,13 +552,11 @@ export default {
               rotateRadian += 90 * Math.PI / 180;
             }
 
-              //New Code
-            
-            
             let proxyDistance = (lines[0].d + lines[1].d +lines[2].d + lines[3].d)/4
             let proxysWidth = 1.282*proxyDistance;
             let proxysHeight = 1.282*proxyDistance;
-            let translate_x = 360;   //Making rotation about the center
+            //Making rotation about the center
+            let translate_x = 360;   
             let translate_y = 360;
 
             console.log(translate_x, translate_y);
@@ -626,14 +628,14 @@ export default {
           const sySpace = 150;
           
           canvasCvCtx.drawImage(this.$refs.img4,sxSpace,sySpace,canvasCv.width,canvasCv.height,0,0,canvasCv.width,canvasCv.height);
-
-          let mat = this.cv.imread(canvasCv);    // load source image into cv
-          let dst = new this.cv.Mat();           // Creating a new copy of the cv.
+          // load source image into cv
+          let mat = this.cv.imread(canvasCv);    
+          // Creating a new copy of the cv.
+          let dst = new this.cv.Mat();           
           this.cv.cvtColor(mat, dst, this.cv.COLOR_RGBA2GRAY, 0);
           mat = dst;
 
-          //BINARY INVERSION
-
+          //Binary Inversion
           this.cv.adaptiveThreshold(mat, mat, 255, this.cv.ADAPTIVE_THRESH_MEAN_C, this.cv.THRESH_BINARY, canvasCvSize/2-1, 0);
           // this.cv.threshold(mat, mat, 127, 255, this.cv.THRESH_BINARY);
           let M = this.cv.Mat.ones(7, 7, this.cv.CV_8U);
